@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">Rentoo</string>
+
+    <string name="signed_in">Signed In</string>
+    <string name="signed_out">Signed Out</string>
+    <string name="start_phone_auth">Start</string>
+    <string name="verify_phone_auth">Verify</string>
+    <string name="resend_phone_auth">Resend</string>
+    <string name="hint_phone_number">Phone Number (+919876543210)</string>
+    <string name="hint_verification_code">Verification Code</string>
+    <string name="instant_validation">(instant validation)</string>
+
+    <string name="heading_main">You are a _______ ?</string>
+    <string name="owner">Owner</string>
+    <string name="tenant">Tenant</string>
+    <string name="service_provider">Service Provider</string>
+    <string name="content_str">You are a owner, you can add/edit/remove your property.</string>
+    <string name="ok_btn_string">Ok Got it.</string>
+    <string name="register_btn_string">Register</string>
+    <string name="or_str">Or</string>
+    <string name="miss_call_btn_str">Give a missed call.</string>
+    <string name="register_your_property">Register Your Property</string>
+    <string name="name">Name :-</string>
+    <string name="anil">Anil</string>
+    <string name="address">Address :-</string>
+    <string name="khandari_agra">Khandari, Agra</string>
+    <string name="phone_no">Phone No.:-</string>
+    <string name="_9876543210">9876543210</string>
+    <string name="email_id">Email ID :-</string>
+    <string name="username_abc_com">username@abc.com</string>
+    <string name="type_of_space">Type of Space</string>
+    <string name="_1_bhk">1 BHK</string>
+    <string name="_2_bhk_or_above">2 BHK or Above</string>
+    <string name="hostel">Hostel</string>
+    <string name="pg">PG</string>
+    <string name="facilities">Facilities :-</string>
+    <string name="fully_furnished">Fully Furnished</string>
+    <string name="semi_furnished">Semi Furnished</string>
+    <string name="unfurnished">Unfurnished</string>
+    <string name="tenant_type">Tenant Type :-</string>
+    <string name="family">Family</string>
+    <string name="bachelor">bachelor</string>
+    <string name="both">Both</string>
+    <string name="expected_rent">Expected Rent :-</string>
+    <string name="_5000">5000</string>
+    <string name="submit">Submit</string>
+    <string name="content_tenant_str">1. A one &amp; top for all your hobies about getting a place on rent.\n2. Be it a room| house| flat| hostal or even a beal, we have it all.</string>
+    <string name="registration">Registration</string>
+    <string name="age">Age</string>
+    <string name="occupation">Occupation :-</string>
+    <string name="marital_status">Marital Status</string>
+    <string name="married">Married</string>
+    <string name="unmarried">Unmarried</string>
+    <string name="_21">21</string>
+
+</resources>
