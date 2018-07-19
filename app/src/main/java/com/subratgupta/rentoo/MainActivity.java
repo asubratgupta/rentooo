@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-
         goTo(readData(TYPE));
     }
 
