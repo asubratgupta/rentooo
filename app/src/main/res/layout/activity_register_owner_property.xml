@@ -289,9 +289,42 @@
                     android:orientation="horizontal">
 
                     <ImageButton
-                        android:id="@+id/addMessageImageView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/addMessageImageView1"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:onClick="imgClick"
+                        android:layout_margin="5dp"
+                        android:background="@color/white"
+                        android:src="@drawable/add_img"/>
+                    <ImageButton
+                        android:id="@+id/addMessageImageView2"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:onClick="imgClick"
+                        android:layout_margin="5dp"
+                        android:background="@color/white"
+                        android:src="@drawable/add_img" />
+                    <ImageButton
+                        android:id="@+id/addMessageImageView3"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:onClick="imgClick"
+                        android:layout_margin="5dp"
+                        android:background="@color/white"
+                        android:src="@drawable/add_img" />
+                    <ImageButton
+                        android:id="@+id/addMessageImageView4"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:onClick="imgClick"
+                        android:layout_margin="5dp"
+                        android:background="@color/white"
+                        android:src="@drawable/add_img" />
+                    <ImageButton
+                        android:id="@+id/addMessageImageView5"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:onClick="imgClick"
                         android:layout_margin="5dp"
                         android:background="@color/white"
                         android:src="@drawable/add_img" />
