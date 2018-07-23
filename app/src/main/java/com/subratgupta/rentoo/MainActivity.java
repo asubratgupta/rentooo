@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case TENANT:
-                Intent goToTenant = new Intent(this, RegisterTenant.class);
+                Intent goToTenant = new Intent(this, RegisterTenantNum.class);
                 startActivity(goToTenant);
                 break;
 /*

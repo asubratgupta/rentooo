@@ -6,7 +6,7 @@
     <string name="start_phone_auth">Send OTP</string>
     <string name="verify_phone_auth">Verify</string>
     <string name="resend_phone_auth">Resend</string>
-    <string name="hint_phone_number">Phone Number (+919876543210)</string>
+    <string name="hint_phone_number">Phone Number (9876543210)</string>
     <string name="hint_verification_code">Verification Code</string>
     <string name="instant_validation">(instant validation)</string>
 

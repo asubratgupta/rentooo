@@ -16,13 +16,20 @@
         android:textSize="24sp"
         android:text="Owner Name"/>
 
-    <Switch
-        android:id="@+id/switch1"
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onClick"
-        android:checked="false"
-        android:text="Snoozed" />
+        android:layout_height="wrap_content">
+
+        <Switch
+            android:id="@+id/switch1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:onClick="onClick"
+            android:checked="false"
+            android:text="Snoozed" />
+
+    </RelativeLayout>
 
     <Button
         android:layout_width="wrap_content"

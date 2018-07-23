@@ -88,47 +88,51 @@ public class RegisterOwnerProperty extends AppCompatActivity {
         mFacilities = (RadioGroup) findViewById(R.id.facilities_radio);
         mTenantType = (RadioGroup) findViewById(R.id.tenant_type_radio);
 
-        RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String name = dataSnapshot.child("details").child("name").getValue(String.class);
-                String address = dataSnapshot.child("details").child("address").getValue(String.class);
-                String email = dataSnapshot.child("details").child("email").getValue(String.class);
-                Integer facilities_int = dataSnapshot.child("details").child("facilities_int").getValue(Integer.class);
-                String rent = dataSnapshot.child("details").child("rent").getValue(String.class);
-                Integer tenant_type_int = dataSnapshot.child("details").child("tenant_type_int").getValue(Integer.class);
-                Integer type_of_space_int = dataSnapshot.child("details").child("type_of_space_int").getValue(Integer.class);
-                String img1 = dataSnapshot.child("photos").child("1").child("imageUrl").getValue(String.class);
-                String img2 = dataSnapshot.child("photos").child("2").child("imageUrl").getValue(String.class);
-                String img3 = dataSnapshot.child("photos").child("3").child("imageUrl").getValue(String.class);
-                String img4 = dataSnapshot.child("photos").child("4").child("imageUrl").getValue(String.class);
-                String img5 = dataSnapshot.child("photos").child("5").child("imageUrl").getValue(String.class);
+        try{
+            RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String name = dataSnapshot.child("details").child("name").getValue(String.class);
+                    String address = dataSnapshot.child("details").child("address").getValue(String.class);
+                    String email = dataSnapshot.child("details").child("email").getValue(String.class);
+                    Integer facilities_int = dataSnapshot.child("details").child("facilities_int").getValue(Integer.class);
+                    String rent = dataSnapshot.child("details").child("rent").getValue(String.class);
+                    Integer tenant_type_int = dataSnapshot.child("details").child("tenant_type_int").getValue(Integer.class);
+                    Integer type_of_space_int = dataSnapshot.child("details").child("type_of_space_int").getValue(Integer.class);
+                    String img1 = dataSnapshot.child("photos").child("1").child("imageUrl").getValue(String.class);
+                    String img2 = dataSnapshot.child("photos").child("2").child("imageUrl").getValue(String.class);
+                    String img3 = dataSnapshot.child("photos").child("3").child("imageUrl").getValue(String.class);
+                    String img4 = dataSnapshot.child("photos").child("4").child("imageUrl").getValue(String.class);
+                    String img5 = dataSnapshot.child("photos").child("5").child("imageUrl").getValue(String.class);
 
-                ((TextView) findViewById(R.id.name)).setText(name);
-                ((TextView) findViewById(R.id.address)).setText(address);
-                ((TextView) findViewById(R.id.email)).setText(email);
-                ((TextView) findViewById(R.id.rent)).setText(rent);
-                try {
-                    radioClick(facilities_int);
-                    radioClick(tenant_type_int);
-                    radioClick(type_of_space_int);
-                } catch (Exception e){
-                    Toast.makeText(getApplicationContext(),"Please fill all details",Toast.LENGTH_LONG).show();
+                    ((TextView) findViewById(R.id.name)).setText(name);
+                    ((TextView) findViewById(R.id.address)).setText(address);
+                    ((TextView) findViewById(R.id.email)).setText(email);
+                    ((TextView) findViewById(R.id.rent)).setText(rent);
+                    try {
+                        radioClick(facilities_int);
+                        radioClick(tenant_type_int);
+                        radioClick(type_of_space_int);
+                    } catch (Exception e){
+                        Toast.makeText(getApplicationContext(),"Please fill all details",Toast.LENGTH_LONG).show();
+                    }
+
+                    Glide.with(getApplicationContext()).load(img1).into((ImageView)findViewById(R.id.addMessageImageView1));
+                    Glide.with(getApplicationContext()).load(img2).into((ImageView)findViewById(R.id.addMessageImageView2));
+                    Glide.with(getApplicationContext()).load(img3).into((ImageView)findViewById(R.id.addMessageImageView3));
+                    Glide.with(getApplicationContext()).load(img4).into((ImageView)findViewById(R.id.addMessageImageView4));
+                    Glide.with(getApplicationContext()).load(img5).into((ImageView)findViewById(R.id.addMessageImageView5));
+
                 }
 
-                Glide.with(getApplicationContext()).load(img1).into((ImageView)findViewById(R.id.addMessageImageView1));
-                Glide.with(getApplicationContext()).load(img2).into((ImageView)findViewById(R.id.addMessageImageView2));
-                Glide.with(getApplicationContext()).load(img3).into((ImageView)findViewById(R.id.addMessageImageView3));
-                Glide.with(getApplicationContext()).load(img4).into((ImageView)findViewById(R.id.addMessageImageView4));
-                Glide.with(getApplicationContext()).load(img5).into((ImageView)findViewById(R.id.addMessageImageView5));
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                findViewById(R.id.reg_view).setVisibility(View.GONE);
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    findViewById(R.id.reg_view).setVisibility(View.GONE);
+                }
+            });
+        } catch(Exception e){
+            Log.d("OwnProp",e.getMessage());
+        }
 
         RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("details").child("isComplete").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -149,7 +153,6 @@ public class RegisterOwnerProperty extends AppCompatActivity {
     private void radioClick(int id) {
         ((RadioButton) findViewById(id)).performClick();
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
