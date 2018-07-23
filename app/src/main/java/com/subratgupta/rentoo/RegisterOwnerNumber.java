@@ -176,6 +176,11 @@ public class RegisterOwnerNumber extends AppCompatActivity implements
 
         // [START_EXCLUDE]
         if (mVerificationInProgress && validatePhoneNumber()) {
+            String phoneNumber = mPhoneNumberField.getText().toString();
+            if (phoneNumber.length()>10){
+                phoneNumber = phoneNumber.substring(phoneNumber.length() - 3);
+            }
+            Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show();
             startPhoneNumberVerification(mPhoneNumberField.getText().toString());
         }
         // [END_EXCLUDE]
