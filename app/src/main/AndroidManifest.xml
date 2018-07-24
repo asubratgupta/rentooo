@@ -30,7 +30,6 @@
         <activity android:name=".OwnerActivity" />
         <activity android:name=".OwnerHomePage" />
         <activity android:name=".RegisterTenant" />
-        <activity android:name=".CameraActivity" />
         <activity android:name=".RegisterTenantNum" />
         <activity android:name=".TenantHomePage"></activity>
     </application>
