@@ -173,6 +173,6 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
 
     @Override
     public void onItemClick(View view, int position) {
-
+        Toast.makeText(getApplicationContext(),propertyArrayList.get(position).getName(),Toast.LENGTH_LONG).show();
     }
 }

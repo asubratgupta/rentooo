@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
@@ -92,5 +93,11 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(getApplicationContext(),"123",Toast.LENGTH_LONG).show();
+        return;
     }
 }

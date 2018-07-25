@@ -8,6 +8,11 @@
     android:orientation="vertical"
     tools:context=".OwnerHomePage">
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
@@ -15,6 +20,11 @@
         android:layout_gravity="center"
         android:textSize="24sp"
         android:text="Owner Name"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -31,12 +41,10 @@
 
     </RelativeLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/ButtonStyle"
-        android:padding="5dp"
-        android:text="chat"/>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -45,56 +53,26 @@
         android:text="Interested Profiles"
         style="@style/ButtonStyle"/>
 
-    <android.support.v7.widget.CardView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/interested_profiles"
         android:layout_width="match_parent"
-        android:layout_margin="12dp"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/iname1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:textSize="24sp"
-                android:text="Name1"/>
-            <TextView
-                android:id="@+id/iphone1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:textSize="24sp"
-                android:text="Phonee1"/>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+        android:layout_height="0dp"
+        android:layout_weight="20"/>
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_margin="12dp"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/iname2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:textSize="24sp"
-            android:text="Name2"/>
-    </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_margin="12dp"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/iname3"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/sign_out"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:textSize="24sp"
-            android:text="Name3"/>
-    </android.support.v7.widget.CardView>
+            android:layout_alignParentEnd="true"
+            android:onClick="onSignOut"
+            android:background="@color/colorPrimary"
+            android:backgroundTintMode="multiply"
+            android:text="Sign Out" />
 
+    </RelativeLayout>
 
 </LinearLayout>

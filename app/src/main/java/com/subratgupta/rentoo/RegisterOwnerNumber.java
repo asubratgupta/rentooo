@@ -44,7 +44,7 @@ public class RegisterOwnerNumber extends AppCompatActivity implements
     private static final int STATE_SIGNIN_SUCCESS = 6;
 
     // [START declare_auth]
-    private FirebaseAuth mAuth;
+    public static FirebaseAuth mAuth;
     // [END declare_auth]
 
     private boolean mVerificationInProgress = false;
@@ -79,7 +79,7 @@ public class RegisterOwnerNumber extends AppCompatActivity implements
         mStartButton = findViewById(R.id.button_start_verification);
         mVerifyButton = findViewById(R.id.button_verify_phone);
         mResendButton = findViewById(R.id.button_resend);
-//        mSignOutButton = findViewById(R.id.sign_out_button);
+        mSignOutButton = findViewById(R.id.sign_out);
 
         // Assign click listeners
         mStartButton.setOnClickListener(this);
@@ -181,7 +181,7 @@ public class RegisterOwnerNumber extends AppCompatActivity implements
                 phoneNumber = phoneNumber.substring(phoneNumber.length() - 3);
             }
             Toast.makeText(this, phoneNumber, Toast.LENGTH_SHORT).show();
-            startPhoneNumberVerification(mPhoneNumberField.getText().toString());
+            startPhoneNumberVerification("+91"+mPhoneNumberField.getText().toString());
         }
         // [END_EXCLUDE]
     }
@@ -342,7 +342,8 @@ public class RegisterOwnerNumber extends AppCompatActivity implements
             mPhoneNumberField.setError("Invalid phone number.");
             return false;
         }
-
+        mStartButton.setEnabled(false);
+        Toast.makeText(getApplicationContext(),"OTP Sent",Toast.LENGTH_LONG).show();
         return true;
     }
     private void enableViews(View... views) {
@@ -364,7 +365,8 @@ public class RegisterOwnerNumber extends AppCompatActivity implements
                     return;
                 }
                 MainActivity.writeData("contact_number",mPhoneNumberField.getText().toString());
-                startPhoneNumberVerification(mPhoneNumberField.getText().toString());
+                startPhoneNumberVerification("+91"+mPhoneNumberField.getText().toString());
+
                 break;
             case R.id.button_verify_phone:
                 String code = mVerificationField.getText().toString();
@@ -376,12 +378,11 @@ public class RegisterOwnerNumber extends AppCompatActivity implements
                 verifyPhoneNumberWithCode(mVerificationId, code);
                 break;
             case R.id.button_resend:
-                resendVerificationCode(mPhoneNumberField.getText().toString(), mResendToken);
+                resendVerificationCode("+91"+mPhoneNumberField.getText().toString(), mResendToken);
                 break;
-//            case R.id.sign_out_button:
-//                signOut();
-//                break;
+            case R.id.sign_out:
+                signOut();
+                break;
         }
     }
-
 }
