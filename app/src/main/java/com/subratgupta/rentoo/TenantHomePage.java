@@ -1,5 +1,6 @@
 package com.subratgupta.rentoo;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -174,5 +175,14 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(getApplicationContext(),propertyArrayList.get(position).getName(),Toast.LENGTH_LONG).show();
+    }
+
+    public void onSignOut(View view) {
+        RegisterTenantNum.mAuth.signOut();
+        MainActivity.editor = MainActivity.sharedPref.edit();
+        MainActivity.editor.clear();
+        MainActivity.editor.apply();
+        Intent goToHome = new Intent(this, MainActivity.class);
+        startActivity(goToHome);
     }
 }

@@ -44,7 +44,7 @@ public class RegisterTenantNum extends AppCompatActivity implements
     private static final int STATE_SIGNIN_SUCCESS = 6;
 
     // [START declare_auth]
-    private FirebaseAuth mAuth;
+    public static FirebaseAuth mAuth;
     // [END declare_auth]
 
     private boolean mVerificationInProgress = false;
