@@ -33,7 +33,8 @@
         <activity android:name=".RegisterTenantNum" />
         <activity android:name=".TenantHomePage" />
         <activity android:name=".TenantHomeRegistered" />
-        <activity android:name=".OwnerViewByTenant"></activity>
+        <activity android:name=".OwnerViewByTenant" />
+        <activity android:name=".InterestedProfilesOnOwner" />
     </application>
 
 </manifest>

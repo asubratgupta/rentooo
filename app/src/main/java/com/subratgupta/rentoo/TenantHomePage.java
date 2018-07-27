@@ -62,8 +62,11 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                location = mLocalList.get((int) id);
-                ownerListFetch();
+                Toast.makeText(getApplicationContext(),position+"",Toast.LENGTH_SHORT).show();
+                if (position>0){
+                    location = mLocalList.get((int) id);
+                    ownerListFetch();
+                }
             }
 
             @Override
@@ -82,6 +85,7 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
                 // of the iterator returned by dataSnapshot.getChildren() to
                 // initialize the array
                 final List<String> cityList = new ArrayList<String>();
+                cityList.add("Choose a city");
 
                 for (DataSnapshot citySnapshot : dataSnapshot.child("cityList").getChildren()) {
                     String city = citySnapshot.getValue(String.class);
@@ -112,6 +116,7 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
                 // of the iterator returned by dataSnapshot.getChildren() to
                 // initialize the array
                 final List<String> localList = new ArrayList<String>();
+                localList.add("Choose Local Area");
 
                 for (DataSnapshot localSnapshot : dataSnapshot.child("localList").child(mCity).getChildren()) {
                     String local = localSnapshot.getValue(String.class);

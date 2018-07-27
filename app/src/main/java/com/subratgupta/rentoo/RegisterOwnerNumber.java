@@ -334,6 +334,7 @@ public class RegisterOwnerNumber extends AppCompatActivity implements
             mDatabase.child("users").child(MainActivity.readData("user_id")).child("contact_number").setValue(MainActivity.readData("contact_number"));
             mDatabase.child("users").child(MainActivity.readData("user_id")).child("type").setValue(MainActivity.readData("type"));
             goto_reg_prop();
+
         }
     }
     private boolean validatePhoneNumber() {
@@ -342,7 +343,6 @@ public class RegisterOwnerNumber extends AppCompatActivity implements
             mPhoneNumberField.setError("Invalid phone number.");
             return false;
         }
-        mStartButton.setEnabled(false);
         Toast.makeText(getApplicationContext(),"OTP Sent",Toast.LENGTH_LONG).show();
         return true;
     }

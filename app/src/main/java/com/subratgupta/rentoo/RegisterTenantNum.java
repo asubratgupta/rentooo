@@ -339,7 +339,7 @@ public class RegisterTenantNum extends AppCompatActivity implements
             mPhoneNumberField.setError("Invalid phone number.");
             return false;
         }
-
+        Toast.makeText(getApplicationContext(),"OTP Sent",Toast.LENGTH_LONG).show();
         return true;
     }
     private void enableViews(View... views) {
@@ -378,6 +378,15 @@ public class RegisterTenantNum extends AppCompatActivity implements
 //            case R.id.sign_out_button:
 //                signOut();
 //                break;
+
+            case R.id.register:
+                findViewById(R.id.first).setVisibility(View.GONE);
+                findViewById(R.id.register_page).setVisibility(View.VISIBLE);
+                break;
+            case R.id.not_now:
+                Intent goToTenant = new Intent(this, TenantHomePage.class);
+                startActivity(goToTenant);
+                break;
         }
     }
 

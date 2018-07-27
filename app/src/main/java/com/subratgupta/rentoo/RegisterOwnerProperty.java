@@ -20,7 +20,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -36,6 +40,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.common.images.ImageRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
@@ -68,7 +74,7 @@ public class RegisterOwnerProperty extends AppCompatActivity {
     ImageView image;
     LinearLayout linearLayout;
 
-    private int i = 1;
+    private int i;
     private RadioGroup mTypeOfSpace;
     private RadioGroup mFacilities;
     private RadioGroup mTenantType;
@@ -77,7 +83,6 @@ public class RegisterOwnerProperty extends AppCompatActivity {
     private static final String LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif";
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
-    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
 
 
     @Override
@@ -96,7 +101,7 @@ public class RegisterOwnerProperty extends AppCompatActivity {
         mFacilities = (RadioGroup) findViewById(R.id.facilities_radio);
         mTenantType = (RadioGroup) findViewById(R.id.tenant_type_radio);
 
-        try{
+        try {
             RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -112,7 +117,9 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                     String img3 = dataSnapshot.child("photos").child("3").child("imageUrl").getValue(String.class);
                     String img4 = dataSnapshot.child("photos").child("4").child("imageUrl").getValue(String.class);
                     String img5 = dataSnapshot.child("photos").child("5").child("imageUrl").getValue(String.class);
+                    String profile_pic = dataSnapshot.child("profile_pic").child("imageUrl").getValue(String.class);
 
+                    Glide.with(getApplicationContext()).load(profile_pic).into((ImageView) findViewById(R.id.profile_pic));
                     ((TextView) findViewById(R.id.name)).setText(name);
                     ((TextView) findViewById(R.id.address)).setText(address);
                     ((TextView) findViewById(R.id.email)).setText(email);
@@ -121,15 +128,15 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                         radioClick(facilities_int);
                         radioClick(tenant_type_int);
                         radioClick(type_of_space_int);
-                    } catch (Exception e){
-                        Toast.makeText(getApplicationContext(),"Please fill all details",Toast.LENGTH_LONG).show();
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Please fill all details", Toast.LENGTH_LONG).show();
                     }
 
-                    Glide.with(getApplicationContext()).load(img1).into((ImageView)findViewById(R.id.addMessageImageView1));
-                    Glide.with(getApplicationContext()).load(img2).into((ImageView)findViewById(R.id.addMessageImageView2));
-                    Glide.with(getApplicationContext()).load(img3).into((ImageView)findViewById(R.id.addMessageImageView3));
-                    Glide.with(getApplicationContext()).load(img4).into((ImageView)findViewById(R.id.addMessageImageView4));
-                    Glide.with(getApplicationContext()).load(img5).into((ImageView)findViewById(R.id.addMessageImageView5));
+                    Glide.with(getApplicationContext()).load(img1).into((ImageView) findViewById(R.id.addMessageImageView1));
+                    Glide.with(getApplicationContext()).load(img2).into((ImageView) findViewById(R.id.addMessageImageView2));
+                    Glide.with(getApplicationContext()).load(img3).into((ImageView) findViewById(R.id.addMessageImageView3));
+                    Glide.with(getApplicationContext()).load(img4).into((ImageView) findViewById(R.id.addMessageImageView4));
+                    Glide.with(getApplicationContext()).load(img5).into((ImageView) findViewById(R.id.addMessageImageView5));
 
                 }
 
@@ -138,8 +145,8 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                     findViewById(R.id.reg_view).setVisibility(View.GONE);
                 }
             });
-        } catch(Exception e){
-            Log.d("OwnProp",e.getMessage());
+        } catch (Exception e) {
+            Log.d("OwnProp", e.getMessage());
         }
 
         RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("details").child("isComplete").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -147,15 +154,47 @@ public class RegisterOwnerProperty extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
                 if (Objects.equals(value, "true")) {
-                    goTo();
+                    findViewById(R.id.progress_bar).setVisibility(View.GONE);
+                    findViewById(R.id.reg_view).setVisibility(View.VISIBLE);
+                    findViewById(R.id.skip_btn).setVisibility(View.VISIBLE);
+                }
+                else {
+                    findViewById(R.id.progress_bar).setVisibility(View.GONE);
+                    findViewById(R.id.reg_view).setVisibility(View.VISIBLE);
+                    findViewById(R.id.skip_btn).setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 findViewById(R.id.reg_view).setVisibility(View.GONE);
+                findViewById(R.id.skip_btn).setVisibility(View.GONE);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.sign_out_menu:
+                //signout
+                RegisterOwnerNumber.mAuth.signOut();
+                MainActivity.editor = MainActivity.sharedPref.edit();
+                MainActivity.editor.clear();
+                MainActivity.editor.apply();
+                Intent goToHome = new Intent(this, MainActivity.class);
+                startActivity(goToHome);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void radioClick(int id) {
@@ -181,6 +220,7 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                 } catch (Exception e) {
                     Log.d(TAG, e.getMessage());
                 }
+                deleteImage();
 
                 MessageHelper tempMessage = new MessageHelper();
                 RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("photos").push()
@@ -211,6 +251,9 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                                             break;
                                         case 5:
                                             image = (ImageButton) findViewById(R.id.addMessageImageView5);
+                                            break;
+                                        case 10:
+                                            image = (ImageView) findViewById(R.id.profile_pic);
                                             break;
 
                                     }
@@ -263,6 +306,10 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                 case R.id.addMessageImageView5:
                     i = 5;
                     break;
+                case R.id.dp_btn:
+                    i = 10;
+                    openGallery();
+                    return;
             }
 
             if (ContextCompat.checkSelfPermission(getApplicationContext(),
@@ -340,15 +387,22 @@ public class RegisterOwnerProperty extends AppCompatActivity {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
             startActivityForResult(intent, REQUEST_IMAGE);
         } catch (Exception e) {
-            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("image/*");
-            startActivityForResult(intent, REQUEST_IMAGE);
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            openGallery();
         }
 
 
         return uri;
+    }
+
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_IMAGE);
+    }
+
+    public void skip(View view) {
+        goTo();
     }
 
     private class DownLoadImageTask extends AsyncTask<String, Void, Bitmap> {
@@ -389,7 +443,7 @@ public class RegisterOwnerProperty extends AppCompatActivity {
         }
     }
 
-    private void putImageInStorage(StorageReference storageReference, Uri uri, final String key) {
+    private void putImageInStorage(StorageReference storageReference, final Uri uri, final String key) {
         storageReference.putFile(uri).addOnCompleteListener(this,
                 new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -399,16 +453,76 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                                     new MessageHelper(null, null,
                                             task.getResult().getDownloadUrl()
                                                     .toString());
-
-                            RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("photos").child("" + i).setValue(messageHelper);
-                            i++;
-
+                            if (i <= 5) {
+                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("photos").child("" + i).setValue(messageHelper);
+                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("photos_key").child("" + i).setValue(key);
+                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("photos_key").child("name" + i).setValue(uri.getLastPathSegment());
+                            } else if (i == 10) {
+                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("profile_pic").setValue(messageHelper);
+                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("profile_pic_key").child("" + i).setValue(key);
+                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("profile_pic_key").child("name" + i).setValue(uri.getLastPathSegment());
+                            }
+                            showImages(messageHelper.getImageUrl());
                         } else {
                             Log.w(TAG, "Image upload task was not successful.",
                                     task.getException());
                         }
                     }
                 });
+    }
+
+    public void showImages(String url) {
+        new DownLoadImageTask(image).execute(url);
+    }
+
+    private void deleteImage(){
+        // Create a storage reference from our app
+        final StorageReference storageReference =
+                FirebaseStorage.getInstance()
+                        .getReference(MainActivity.readData("user_id"));
+
+        RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String key = "";
+                String imageName = "";
+                try{
+                    if (i<=5){
+                        key = dataSnapshot.child("photos_key").child(""+i).getValue(String.class);
+                        imageName = dataSnapshot.child("photos_key").child("name"+i).getValue(String.class);
+                    }else if(i==10){
+                        key = dataSnapshot.child("profile_pic_key").child(""+i).getValue(String.class);
+                        imageName = dataSnapshot.child("profile_pic_key").child("name"+i).getValue(String.class);
+                    }
+                    // Create a reference to the file to delete
+                    StorageReference profileRef = storageReference.child(key).child(imageName);
+
+// Delete the file
+                    profileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // File deleted successfully
+                            Toast.makeText(getApplicationContext(),"Succ",Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Uh-oh, an error occurred!
+                        }
+                    });
+                } catch (Exception e){
+                    //Blank
+                    Log.e("errordelete",e.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                findViewById(R.id.reg_view).setVisibility(View.GONE);
+            }
+        });
+
     }
 
     public void onClick(View view) {
@@ -441,6 +555,7 @@ public class RegisterOwnerProperty extends AppCompatActivity {
 
     private void goTo() {
         Intent goToOwnerHomePage = new Intent(this, OwnerHomePage.class);
+        this.finish();
         startActivity(goToOwnerHomePage);
     }
 

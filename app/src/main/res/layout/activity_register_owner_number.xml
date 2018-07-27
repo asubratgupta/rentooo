@@ -39,15 +39,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp">
         <Button
             android:id="@+id/button_resend"
-            style="@style/ButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="35dp"
+            android:textSize="12sp"
             android:layout_alignParentEnd="true"
-            android:layout_margin="0dp"
             android:text="@string/resend_phone_auth" />
     </RelativeLayout>
 

@@ -52,8 +52,9 @@ public class OwnerActivity extends AppCompatActivity {
                 goTo("register");
                 break;
 
-            case R.id.miss_call:
-                goTo("miss_call");
+//            case R.id.miss_call:
+//                goTo("miss_call");
+//                break;
 
             default:
                 break;

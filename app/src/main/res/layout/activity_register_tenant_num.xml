@@ -8,67 +8,107 @@
     android:orientation="vertical"
     android:weightSum="4">
 
-    <TextView
-        android:id="@+id/status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/signed_out" />
-
-    <Space
+    <LinearLayout
+        android:id="@+id/first"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <EditText
-        android:id="@+id/field_phone_number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_phone_number"
-        android:inputType="phone"
-        android:maxLength="10" />
-
-
-    <Button
-        android:id="@+id/button_start_verification"
-        style="@style/ButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/start_phone_auth" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
         <Button
-            android:id="@+id/button_resend"
+            android:id="@+id/register"
             style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:text="@string/register_btn_string" />
+
+        <Button
+            android:id="@+id/not_now"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:text="Not Now" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/register_page"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="0dp"
-            android:text="@string/resend_phone_auth" />
-    </RelativeLayout>
+            android:layout_gravity="center"
+            android:text="@string/signed_out" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-    <EditText
-        android:id="@+id/field_verification_code"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:hint="@string/hint_verification_code"
-        android:inputType="number" />
+        <EditText
+            android:id="@+id/field_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_phone_number"
+            android:inputType="phone"
+            android:maxLength="10" />
 
 
-    <Button
-        android:id="@+id/button_verify_phone"
-        style="@style/ButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/verify_phone_auth" />
+        <Button
+            android:id="@+id/button_start_verification"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/start_phone_auth" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/button_resend"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:textSize="12sp"
+                android:layout_alignParentEnd="true"
+                android:text="@string/resend_phone_auth" />
+        </RelativeLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <EditText
+            android:id="@+id/field_verification_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:hint="@string/hint_verification_code"
+            android:inputType="number" />
+
+
+        <Button
+            android:id="@+id/button_verify_phone"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/verify_phone_auth" />
+
+    </LinearLayout>
 
 </LinearLayout>
