@@ -269,6 +269,7 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
         if(search){
             findViewById(R.id.profile).setVisibility(View.VISIBLE);
             findViewById(R.id.search_page).setVisibility(View.GONE);
+            search = false;
         }else {
             AlertDialog.Builder builder;
             builder = new AlertDialog.Builder(this);
