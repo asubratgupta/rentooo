@@ -8,9 +8,11 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ToolbarWidgetWrapper;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +37,15 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         goTo(readData(TYPE));
+
+        getSupportActionBar().hide();
+
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.my_toolbar);
+        toolbar.setTitle("Rentooo");
+        toolbar.setSubtitle("A Rent App");
+        toolbar.setLogo(R.mipmap.rentooo_icon);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
     }
 
     public static void writeData(String key, String value) {
@@ -93,11 +104,5 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        Toast.makeText(getApplicationContext(),"123",Toast.LENGTH_LONG).show();
-        return;
     }
 }

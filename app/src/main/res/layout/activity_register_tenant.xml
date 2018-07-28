@@ -1,254 +1,271 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".RegisterTenant">
 
-    <TextView
-        android:id="@+id/contentPanel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="@string/content_tenant_str"
-        android:textSize="18sp" />
-
-    <Button
-        android:id="@+id/ok"
-        style="@style/ButtonStyle"
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone"
-        android:onClick="onClick"
-        android:padding="12dp"
-        android:text="@string/ok_btn_string" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="visible"
+        android:layout_height="wrap_content" />
 
-    <ScrollView
-        android:id="@+id/reg_view"
+    <LinearLayout
+        android:id="@+id/register_page"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/contentPanel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:visibility="gone"
+            android:text="@string/content_tenant_str"
+            android:textSize="18sp" />
 
-            <android.support.design.circularreveal.cardview.CircularRevealCardView
+        <Button
+            android:id="@+id/ok"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"
+            android:onClick="onClick"
+            android:padding="12dp"
+            android:text="@string/ok_btn_string" />
+
+        <ScrollView
+            android:id="@+id/reg_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                app:cardBackgroundColor="@color/colorPrimary"
-                app:cardCornerRadius="5dp">
+                android:orientation="vertical">
 
-                <TextView
+                <android.support.design.circularreveal.cardview.CircularRevealCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/registration"
-                    android:textColor="@color/white"
-                    android:textSize="24sp" />
-
-            </android.support.design.circularreveal.cardview.CircularRevealCardView>
-
-            <android.support.design.circularreveal.cardview.CircularRevealCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                app:cardBackgroundColor="@color/colorPrimary"
-                app:cardCornerRadius="5dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="12dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/name"
-                            android:textColor="@color/white"
-                            android:textSize="18sp" />
-
-                        <EditText
-                            android:id="@+id/name"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:background="@color/white"
-                            android:hint="@string/anil"
-                            android:inputType="textPersonName"
-                            android:padding="5dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="12dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/age"
-                            android:textColor="@color/white"
-                            android:textSize="18sp" />
-
-                        <EditText
-                            android:id="@+id/age"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:background="@color/white"
-                            android:hint="@string/_21"
-                            android:inputType="number"
-                            android:padding="5dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="12dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/phone_no"
-                            android:textColor="@color/white"
-                            android:textSize="18sp" />
-
-                        <EditText
-                            android:id="@+id/field_phone_number"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:background="@color/white"
-                            android:hint="@string/_9876543210"
-                            android:inputType="phone"
-                            android:padding="5dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="12dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/occupation"
-                            android:textColor="@color/white"
-                            android:textSize="18sp" />
-
-                        <EditText
-                            android:id="@+id/field_occupation"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:background="@color/white"
-                            android:hint="Student"
-                            android:inputType="textAutoComplete"
-                            android:padding="5dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="12dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/email_id"
-                            android:textColor="@color/white"
-                            android:textSize="18sp" />
-
-                        <EditText
-                            android:id="@+id/email"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:background="@color/white"
-                            android:hint="@string/username_abc_com"
-                            android:inputType="textEmailAddress"
-                            android:padding="5dp" />
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-            </android.support.design.circularreveal.cardview.CircularRevealCardView>
-
-            <android.support.design.circularreveal.cardview.CircularRevealCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                app:cardBackgroundColor="@color/colorPrimary"
-                app:cardCornerRadius="5dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="12dp"
-                    android:orientation="vertical">
+                    android:layout_margin="5dp"
+                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardCornerRadius="5dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="@string/marital_status"
+                        android:text="@string/registration"
                         android:textColor="@color/white"
-                        android:textSize="18sp" />
+                        android:textSize="24sp" />
 
-                    <RadioGroup
-                        android:id="@+id/marital_radio"
+                </android.support.design.circularreveal.cardview.CircularRevealCardView>
+
+                <android.support.design.circularreveal.cardview.CircularRevealCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardCornerRadius="5dp">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
-                        <RadioButton
-                            android:layout_width="0dp"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/married"
-                            android:layout_weight="1"
-                            android:textColor="@color/white" />
+                            android:layout_margin="12dp"
+                            android:orientation="horizontal">
 
-                        <RadioButton
-                            android:layout_width="0dp"
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/name"
+                                android:textColor="@color/white"
+                                android:textSize="18sp" />
+
+                            <EditText
+                                android:id="@+id/name"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3"
+                                android:background="@color/white"
+                                android:hint="@string/anil"
+                                android:inputType="textPersonName"
+                                android:padding="5dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/unmarried"
-                            android:layout_weight="1"
-                            android:textColor="@color/white" />
+                            android:layout_margin="12dp"
+                            android:orientation="horizontal">
 
-                    </RadioGroup>
-                </LinearLayout>
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/age"
+                                android:textColor="@color/white"
+                                android:textSize="18sp" />
 
-            </android.support.design.circularreveal.cardview.CircularRevealCardView>
+                            <EditText
+                                android:id="@+id/age"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3"
+                                android:background="@color/white"
+                                android:hint="@string/_21"
+                                android:inputType="number"
+                                android:padding="5dp" />
+                        </LinearLayout>
 
-            <Button
-                style="@style/ButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/submit"
-                android:onClick="onClick"
-                android:text="@string/submit" />
-        </LinearLayout>
-    </ScrollView>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:orientation="horizontal">
 
-</LinearLayout>
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/phone_no"
+                                android:textColor="@color/white"
+                                android:textSize="18sp" />
+
+                            <EditText
+                                android:id="@+id/field_phone_number"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3"
+                                android:background="@color/white"
+                                android:hint="@string/_9876543210"
+                                android:inputType="phone"
+                                android:padding="5dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/occupation"
+                                android:textColor="@color/white"
+                                android:textSize="18sp" />
+
+                            <EditText
+                                android:id="@+id/field_occupation"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3"
+                                android:background="@color/white"
+                                android:hint="Student"
+                                android:inputType="textAutoComplete"
+                                android:padding="5dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/email_id"
+                                android:textColor="@color/white"
+                                android:textSize="18sp" />
+
+                            <EditText
+                                android:id="@+id/email"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="3"
+                                android:background="@color/white"
+                                android:hint="@string/username_abc_com"
+                                android:inputType="textEmailAddress"
+                                android:padding="5dp" />
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                </android.support.design.circularreveal.cardview.CircularRevealCardView>
+
+                <android.support.design.circularreveal.cardview.CircularRevealCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardCornerRadius="5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/marital_status"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <RadioGroup
+                            android:id="@+id/marital_radio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/married"
+                                android:layout_weight="1"
+                                android:textColor="@color/white" />
+
+                            <RadioButton
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/unmarried"
+                                android:layout_weight="1"
+                                android:textColor="@color/white" />
+
+                        </RadioGroup>
+                    </LinearLayout>
+
+                </android.support.design.circularreveal.cardview.CircularRevealCardView>
+
+                <Button
+                    style="@style/ButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/submit"
+                    android:onClick="onClick"
+                    android:text="@string/submit" />
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -8,9 +8,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -32,7 +36,7 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
     List<String> mCityList = new ArrayList<String>();
     List<String> mLocalList = new ArrayList<String>();
     String location;
-    ArrayList<Property> propertyArrayList = new ArrayList<>();
+    public static ArrayList<Property> propertyArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,20 +62,29 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
             }
         });
 
+        final Button mSearchButton = (Button) findViewById(R.id.search_btn);
+        mSearchButton.setEnabled(false);
+
         localSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(),position+"",Toast.LENGTH_SHORT).show();
                 if (position>0){
                     location = mLocalList.get((int) id);
-                    ownerListFetch();
+                    mSearchButton.setEnabled(true);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ownerListFetch();
             }
         });
 
@@ -179,15 +192,38 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getApplicationContext(),propertyArrayList.get(position).getName(),Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(),propertyArrayList.get(position).getName(),Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"First Register yourself",Toast.LENGTH_SHORT).show();
+        register(findViewById(R.id.register));
+
     }
 
-    public void onSignOut(View view) {
-        RegisterTenantNum.mAuth.signOut();
-        MainActivity.editor = MainActivity.sharedPref.edit();
-        MainActivity.editor.clear();
-        MainActivity.editor.apply();
-        Intent goToHome = new Intent(this, MainActivity.class);
-        startActivity(goToHome);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.sign_out_menu:
+                //signout
+                RegisterTenantNum.mAuth.signOut();
+                MainActivity.editor = MainActivity.sharedPref.edit();
+                MainActivity.editor.clear();
+                MainActivity.editor.apply();
+                Intent goToHome = new Intent(this, MainActivity.class);
+                startActivity(goToHome);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    public void register(View view) {
+        Intent goToRegisterNum = new Intent(this, RegisterTenantNum.class);
+        startActivity(goToRegisterNum);
     }
 }

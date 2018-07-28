@@ -1,5 +1,7 @@
 package com.subratgupta.rentoo;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
+import java.util.logging.Level;
 
 public class RegisterTenant extends AppCompatActivity {
 
@@ -108,11 +111,16 @@ public class RegisterTenant extends AppCompatActivity {
                     if (Objects.equals(value, "true")) {
                         goTo();
                     }
+                    else {
+                        findViewById(R.id.register_page).setVisibility(View.VISIBLE);
+                        findViewById(R.id.progress_bar).setVisibility(View.GONE);
+                    }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     findViewById(R.id.reg_view).setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "No Internet!",Toast.LENGTH_SHORT).show();
                 }
             });
         }catch (Exception e){
@@ -121,7 +129,7 @@ public class RegisterTenant extends AppCompatActivity {
     }
 
     private void goTo() {
-        Intent goToOwnerHomePage = new Intent(this, TenantHomePage.class);
+        Intent goToOwnerHomePage = new Intent(this, TenantHomeRegistered.class);
         startActivity(goToOwnerHomePage);
     }
 
@@ -159,5 +167,38 @@ public class RegisterTenant extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(this);
+
+        builder.setMessage("msg") .setTitle("title");
+
+        //Setting message manually and performing action on button click
+        builder.setMessage("Do you sure to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent _intentOBJ= new Intent(Intent.ACTION_MAIN);
+                        _intentOBJ.addCategory(Intent.CATEGORY_HOME);
+                        _intentOBJ.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        _intentOBJ.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        getApplicationContext().startActivity(_intentOBJ);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //  Action for 'NO' Button
+                        dialog.cancel();
+                    }
+                });
+        //Creating dialog box
+        AlertDialog alert = builder.create();
+        //Setting the title manually
+        alert.setTitle("Exit");
+        alert.show();
     }
 }

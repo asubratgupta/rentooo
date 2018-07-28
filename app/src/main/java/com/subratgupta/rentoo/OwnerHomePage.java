@@ -39,6 +39,7 @@ import java.util.List;
 
 public class OwnerHomePage extends AppCompatActivity {
 
+    public static boolean edit = false;
     Switch switchBtn;
     DatabaseReference db;
     AlertDialog.Builder builder;
@@ -151,7 +152,11 @@ public class OwnerHomePage extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        finish();
+                        Intent _intentOBJ= new Intent(Intent.ACTION_MAIN);
+                        _intentOBJ.addCategory(Intent.CATEGORY_HOME);
+                        _intentOBJ.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        _intentOBJ.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        getApplicationContext().startActivity(_intentOBJ);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -173,6 +178,7 @@ public class OwnerHomePage extends AppCompatActivity {
     }
 
     public void edit(View view) {
+        edit = true;
         finish();
     }
 }

@@ -7,6 +7,20 @@
     android:orientation="vertical"
     tools:context=".TenantHomePage">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            style="@style/ButtonStyle"
+            android:onClick="register"
+            android:layout_margin="5dp"
+            android:text="Register"/>
+
+    </RelativeLayout>
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="10dp"/>
@@ -30,28 +44,21 @@
         android:layout_width="match_parent"
         android:layout_height="10dp"/>
 
+    <Button
+        android:id="@+id/search_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/ButtonStyle"
+        android:text="Search"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/owner_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/sign_out"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:onClick="onSignOut"
-            android:background="@color/colorPrimary"
-            android:backgroundTintMode="multiply"
-            android:text="Sign Out" />
-
-    </RelativeLayout>
-
-
 
 </LinearLayout>

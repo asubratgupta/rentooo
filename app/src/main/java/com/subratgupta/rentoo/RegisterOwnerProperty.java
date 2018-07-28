@@ -119,7 +119,14 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                     String img5 = dataSnapshot.child("photos").child("5").child("imageUrl").getValue(String.class);
                     String profile_pic = dataSnapshot.child("profile_pic").child("imageUrl").getValue(String.class);
 
-                    Glide.with(getApplicationContext()).load(profile_pic).into((ImageView) findViewById(R.id.profile_pic));
+                    try {
+                        if (profile_pic.length()>=1){
+                            Glide.with(getApplicationContext()).load(profile_pic).into((ImageView) findViewById(R.id.profile_pic));
+                        }
+                    }catch (Exception e){
+                        Log.e("Rentoo Property Reg", e.getMessage());
+                    }
+
                     ((TextView) findViewById(R.id.name)).setText(name);
                     ((TextView) findViewById(R.id.address)).setText(address);
                     ((TextView) findViewById(R.id.email)).setText(email);
@@ -129,14 +136,33 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                         radioClick(tenant_type_int);
                         radioClick(type_of_space_int);
                     } catch (Exception e) {
-                        Toast.makeText(getApplicationContext(), "Please fill all details", Toast.LENGTH_LONG).show();
+                        if (OwnerHomePage.edit || MainActivity.readData("isComplete").equals("true")){
+                            Toast.makeText(getApplicationContext(), "Please fill all details", Toast.LENGTH_LONG).show();
+                        }
                     }
 
-                    Glide.with(getApplicationContext()).load(img1).into((ImageView) findViewById(R.id.addMessageImageView1));
-                    Glide.with(getApplicationContext()).load(img2).into((ImageView) findViewById(R.id.addMessageImageView2));
-                    Glide.with(getApplicationContext()).load(img3).into((ImageView) findViewById(R.id.addMessageImageView3));
-                    Glide.with(getApplicationContext()).load(img4).into((ImageView) findViewById(R.id.addMessageImageView4));
-                    Glide.with(getApplicationContext()).load(img5).into((ImageView) findViewById(R.id.addMessageImageView5));
+                    try{
+                        if (img1.length()>=1){
+                            Glide.with(getApplicationContext()).load(img1).into((ImageView) findViewById(R.id.addMessageImageView1));
+                        }
+                        if (img2.length()>=1){
+                            Glide.with(getApplicationContext()).load(img2).into((ImageView) findViewById(R.id.addMessageImageView2));
+                        }
+                        if (img3.length()>=1){
+                            Glide.with(getApplicationContext()).load(img3).into((ImageView) findViewById(R.id.addMessageImageView3));
+                        }
+                        if (img4.length()>=1){
+                            Glide.with(getApplicationContext()).load(img4).into((ImageView) findViewById(R.id.addMessageImageView4));
+                        }
+                        if (img5.length()>=1){
+                            Glide.with(getApplicationContext()).load(img5).into((ImageView) findViewById(R.id.addMessageImageView5));
+                        }
+                    }
+
+                    catch (Exception e){
+                        Log.e("Rentoo Property", e.getMessage());
+                    }
+
 
                 }
 
@@ -154,9 +180,14 @@ public class RegisterOwnerProperty extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
                 if (Objects.equals(value, "true")) {
-                    findViewById(R.id.progress_bar).setVisibility(View.GONE);
-                    findViewById(R.id.reg_view).setVisibility(View.VISIBLE);
-                    findViewById(R.id.skip_btn).setVisibility(View.VISIBLE);
+                    if (OwnerHomePage.edit){
+                        findViewById(R.id.progress_bar).setVisibility(View.GONE);
+                        findViewById(R.id.reg_view).setVisibility(View.VISIBLE);
+                        findViewById(R.id.skip_btn).setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        goTo();
+                    }
                 }
                 else {
                     findViewById(R.id.progress_bar).setVisibility(View.GONE);
@@ -561,7 +592,10 @@ public class RegisterOwnerProperty extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+        Intent _intentOBJ= new Intent(Intent.ACTION_MAIN);
+        _intentOBJ.addCategory(Intent.CATEGORY_HOME);
+        _intentOBJ.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        _intentOBJ.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getApplicationContext().startActivity(_intentOBJ);
     }
 }

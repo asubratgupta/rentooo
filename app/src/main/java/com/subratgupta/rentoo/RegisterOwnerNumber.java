@@ -79,7 +79,6 @@ public class RegisterOwnerNumber extends AppCompatActivity implements
         mStartButton = findViewById(R.id.button_start_verification);
         mVerifyButton = findViewById(R.id.button_verify_phone);
         mResendButton = findViewById(R.id.button_resend);
-        mSignOutButton = findViewById(R.id.sign_out);
 
         // Assign click listeners
         mStartButton.setOnClickListener(this);
@@ -379,9 +378,6 @@ public class RegisterOwnerNumber extends AppCompatActivity implements
                 break;
             case R.id.button_resend:
                 resendVerificationCode("+91"+mPhoneNumberField.getText().toString(), mResendToken);
-                break;
-            case R.id.sign_out:
-                signOut();
                 break;
         }
     }
