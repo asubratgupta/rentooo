@@ -95,11 +95,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent goToTenant = new Intent(this, RegisterTenantNum.class);
                 startActivity(goToTenant);
                 break;
-/*
             case SERVICE_PROVIDER:
                 Intent goToSP = new Intent(this, ServiceProviderActivity.class);
                 startActivity(goToSP);
-                break;*/
+                break;
 
             default:
                 break;
