@@ -19,7 +19,7 @@
         android:id="@+id/register_page"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical">
 
         <TextView
@@ -72,7 +72,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="5dp">
 
                     <LinearLayout
@@ -118,7 +117,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/name"
-                                android:textColor="@color/white"
                                 android:textSize="18sp" />
 
                             <EditText
@@ -126,7 +124,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
-                                android:background="@color/white"
                                 android:hint="@string/anil"
                                 android:inputType="textPersonName"
                                 android:padding="5dp" />
@@ -143,7 +140,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/age"
-                                android:textColor="@color/white"
                                 android:textSize="18sp" />
 
                             <EditText
@@ -151,7 +147,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
-                                android:background="@color/white"
                                 android:hint="@string/_21"
                                 android:inputType="number"
                                 android:padding="5dp" />
@@ -168,7 +163,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/phone_no"
-                                android:textColor="@color/white"
                                 android:textSize="18sp" />
 
                             <EditText
@@ -176,7 +170,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
-                                android:background="@color/white"
                                 android:hint="@string/_9876543210"
                                 android:inputType="phone"
                                 android:padding="5dp" />
@@ -193,7 +186,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/occupation"
-                                android:textColor="@color/white"
                                 android:textSize="18sp" />
 
                             <EditText
@@ -201,7 +193,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
-                                android:background="@color/white"
                                 android:hint="Student"
                                 android:inputType="textAutoComplete"
                                 android:padding="5dp" />
@@ -218,7 +209,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/email_id"
-                                android:textColor="@color/white"
                                 android:textSize="18sp" />
 
                             <EditText
@@ -226,7 +216,6 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
-                                android:background="@color/white"
                                 android:hint="@string/username_abc_com"
                                 android:inputType="textEmailAddress"
                                 android:padding="5dp" />
@@ -241,7 +230,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="5dp">
 
                     <LinearLayout
@@ -255,7 +244,6 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="@string/marital_status"
-                            android:textColor="@color/white"
                             android:textSize="18sp" />
 
                         <RadioGroup
@@ -268,15 +256,13 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:text="@string/married"
-                                android:layout_weight="1"
-                                android:textColor="@color/white" />
+                                android:layout_weight="1" />
 
                             <RadioButton
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:text="@string/unmarried"
-                                android:layout_weight="1"
-                                android:textColor="@color/white" />
+                                android:layout_weight="1" />
 
                         </RadioGroup>
                     </LinearLayout>

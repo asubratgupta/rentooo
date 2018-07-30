@@ -33,7 +33,7 @@ import java.util.List;
 
 public class TenantHomeRegistered extends AppCompatActivity implements OwnerListRecyclerViewAdapter.ItemClickListener {
 
-    public static Boolean search = false;
+    public static String mode = "main";
     OwnerListRecyclerViewAdapter adapter;
     public static boolean edit = false;
     Switch switchBtn;
@@ -44,6 +44,7 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
     Spinner localSpinner;
     List<String> mCityList = new ArrayList<String>();
     List<String> mLocalList = new ArrayList<String>();
+    List<String> ownerList;
     String location;
     public static ArrayList<Property> propertyArrayList = new ArrayList<>();
 
@@ -199,7 +200,7 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
                 // Is better to use a List, because you don't know the size
                 // of the iterator returned by dataSnapshot.getChildren() to
                 // initialize the array
-                final List<String> ownerList = new ArrayList<String>();
+                ownerList = new ArrayList<String>();
 
                 for (DataSnapshot locationIDs : dataSnapshot.child("locationSpecifiedID").child(location).getChildren()) {
                     String id = locationIDs.getValue(String.class);
@@ -229,10 +230,47 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
         });
     }
 
+    private void shortListFetch() {
+        RegisterTenantNum.mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                propertyArrayList.clear();
+
+                ownerList = new ArrayList<String>();
+
+                for (DataSnapshot locationIDs : dataSnapshot.child("users").child(MainActivity.readData("user_id")).child("shortlisted").getChildren()) {
+                    String id = locationIDs.getValue(String.class);
+                    ownerList.add(id);
+                }
+
+
+                for (int i = 0; i < ownerList.size(); i++) {
+                    try {
+                        Property owner = dataSnapshot.child("users").child(ownerList.get(i)).child("details").getValue(Property.class);
+                        propertyArrayList.add(owner);
+                    } catch (Exception e) {
+                        Log.e("tenhomepage", e.getMessage());
+                    }
+                }
+                RecyclerView recyclerView = findViewById(R.id.short_list);
+                recyclerView.setLayoutManager(new LinearLayoutManager(TenantHomeRegistered.this));
+                adapter = new OwnerListRecyclerViewAdapter(TenantHomeRegistered.this, propertyArrayList);
+                adapter.setClickListener(TenantHomeRegistered.this);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "databaseError", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(getApplicationContext(),propertyArrayList.get(position).getName(),Toast.LENGTH_LONG).show();
-
+        RegisterTenantNum.mDatabase.child("users").child(ownerList.get(position)).child("interested_tenant").child(MainActivity.readData("user_id")).setValue(MainActivity.readData("user_id"));
+        RegisterTenantNum.mDatabase.child("users").child(MainActivity.readData("user_id")).child("shortlisted").child(ownerList.get(position)).setValue(ownerList.get(position));
     }
 
     @Override
@@ -266,39 +304,49 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
 
     @Override
     public void onBackPressed() {
-        if(search){
-            findViewById(R.id.profile).setVisibility(View.VISIBLE);
-            findViewById(R.id.search_page).setVisibility(View.GONE);
-            search = false;
-        }else {
-            AlertDialog.Builder builder;
-            builder = new AlertDialog.Builder(this);
+        switch(mode){
+            case "main":
+                AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(this);
 
-            builder.setMessage("msg") .setTitle("title");
+                builder.setMessage("msg") .setTitle("title");
 
-            //Setting message manually and performing action on button click
-            builder.setMessage("Do you sure to exit?")
-                    .setCancelable(false)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent _intentOBJ= new Intent(Intent.ACTION_MAIN);
-                            _intentOBJ.addCategory(Intent.CATEGORY_HOME);
-                            _intentOBJ.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            _intentOBJ.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            getApplicationContext().startActivity(_intentOBJ);
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            //  Action for 'NO' Button
-                            dialog.cancel();
-                        }
-                    });
-            //Creating dialog box
-            AlertDialog alert = builder.create();
-            //Setting the title manually
-            alert.setTitle("Exit");
-            alert.show();
+                //Setting message manually and performing action on button click
+                builder.setMessage("Do you sure to exit?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent _intentOBJ= new Intent(Intent.ACTION_MAIN);
+                                _intentOBJ.addCategory(Intent.CATEGORY_HOME);
+                                _intentOBJ.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                _intentOBJ.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                getApplicationContext().startActivity(_intentOBJ);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //  Action for 'NO' Button
+                                dialog.cancel();
+                            }
+                        });
+                //Creating dialog box
+                AlertDialog alert = builder.create();
+                //Setting the title manually
+                alert.setTitle("Exit");
+                alert.show();
+                break;
+            case "search":
+                findViewById(R.id.profile).setVisibility(View.VISIBLE);
+                findViewById(R.id.search_page).setVisibility(View.GONE);
+                findViewById(R.id.search_page).setVisibility(View.GONE);
+                mode = "main";
+                break;
+            case "short":
+                findViewById(R.id.profile).setVisibility(View.VISIBLE);
+                findViewById(R.id.search_page).setVisibility(View.GONE);
+                findViewById(R.id.shortlist_page).setVisibility(View.GONE);
+                mode = "main";
+                break;
         }
     }
 
@@ -347,7 +395,16 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
     public void goto_rooms(View view) {
         findViewById(R.id.profile).setVisibility(View.GONE);
         findViewById(R.id.search_page).setVisibility(View.VISIBLE);
-        search = true;
+        findViewById(R.id.shortlist_page).setVisibility(View.GONE);
+        mode = "search";
+    }
+
+    public void shortlisted(View view) {
+        findViewById(R.id.profile).setVisibility(View.GONE);
+        findViewById(R.id.search_page).setVisibility(View.GONE);
+        findViewById(R.id.shortlist_page).setVisibility(View.VISIBLE);
+        mode = "short";
+        shortListFetch();
     }
 }
 

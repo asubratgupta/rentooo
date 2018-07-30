@@ -39,7 +39,7 @@ public class InterestedProfilesOnOwner extends AppCompatActivity implements Owne
                 // initialize the array
                 final List<String> tenantList = new ArrayList<String>();
 
-                for (DataSnapshot locationIDs : dataSnapshot.child("users").child(MainActivity.readData("user_id")).child("interested").getChildren()) {
+                for (DataSnapshot locationIDs : dataSnapshot.child("users").child(MainActivity.readData("user_id")).child("interested_tenant").getChildren()) {
                     String id = locationIDs.getValue(String.class);
                     tenantList.add(id);
                 }

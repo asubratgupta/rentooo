@@ -6,6 +6,7 @@ public class Property {
     private String address;
     private String type_of_space;
     private String rent;
+    private String id;
 
     public Property() {
     }

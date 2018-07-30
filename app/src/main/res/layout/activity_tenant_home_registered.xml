@@ -67,6 +67,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="Show Your Profile For Roommates Search: "/>
+
             <Switch
                 android:id="@+id/switch1"
                 android:layout_width="wrap_content"
@@ -148,6 +154,21 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/owner_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/shortlist_page"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/short_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"/>
