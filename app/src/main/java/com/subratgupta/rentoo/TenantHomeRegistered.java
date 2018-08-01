@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
     List<String> mCityList = new ArrayList<String>();
     List<String> mLocalList = new ArrayList<String>();
     List<String> ownerList;
+    public static Property profile;
     String location;
     public static ArrayList<Property> propertyArrayList = new ArrayList<>();
 
@@ -268,9 +270,11 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getApplicationContext(),propertyArrayList.get(position).getName(),Toast.LENGTH_LONG).show();
         RegisterTenantNum.mDatabase.child("users").child(ownerList.get(position)).child("interested_tenant").child(MainActivity.readData("user_id")).setValue(MainActivity.readData("user_id"));
         RegisterTenantNum.mDatabase.child("users").child(MainActivity.readData("user_id")).child("shortlisted").child(ownerList.get(position)).setValue(ownerList.get(position));
+        profile = propertyArrayList.get(position);
+        Intent goToProfile = new Intent(this, RoomView.class);
+        startActivity(goToProfile);
     }
 
     @Override
@@ -357,33 +361,9 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
             db.child("status").setValue(true);
         }
         else {
-
-            builder.setMessage("msg") .setTitle("title");
-
-            //Setting message manually and performing action on button click
-            builder.setMessage("Do you want to Snooze your profile for 30 days ?")
-                    .setCancelable(false)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            switchBtn.setText("Snoozed");
-                            db.child("status").setValue(false);
-                            switchBtn.setChecked(false);
-                            Toast.makeText(getApplicationContext(),"Your profile snoozed for 30 days",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            //  Action for 'NO' Button
-                            dialog.cancel();
-                            switchBtn.setChecked(true);
-                        }
-                    });
-            //Creating dialog box
-            AlertDialog alert = builder.create();
-            //Setting the title manually
-            alert.setTitle("Profile Snooze");
-            alert.show();
+            switchBtn.setText("Snoozed");
+            db.child("status").setValue(false);
+            switchBtn.setChecked(false);
         }
     }
 

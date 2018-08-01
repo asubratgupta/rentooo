@@ -36,7 +36,8 @@
         <activity android:name=".OwnerViewByTenant" />
         <activity android:name=".InterestedProfilesOnOwner" />
         <activity android:name=".ServiceProviderActivity" />
-        <activity android:name=".RegisterService"></activity>
+        <activity android:name=".RegisterService" />
+        <activity android:name=".RoomView"></activity>
     </application>
 
 </manifest>

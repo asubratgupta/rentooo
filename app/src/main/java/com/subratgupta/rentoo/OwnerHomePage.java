@@ -56,7 +56,7 @@ public class OwnerHomePage extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.child("details").child("name").getValue(String.class);
-                String profile_url = dataSnapshot.child("profile_pic").child("imageUrl").getValue(String.class);
+                String profile_url = dataSnapshot.child("details").child("ppi410").getValue(String.class);
                 ((TextView) findViewById(R.id.name)).setText(value);
                 Glide.with(getApplicationContext()).load(profile_url).into((ImageView) findViewById(R.id.profile_pic));
 

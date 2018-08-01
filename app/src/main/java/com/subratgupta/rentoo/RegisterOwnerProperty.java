@@ -112,12 +112,12 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                     String rent = dataSnapshot.child("details").child("rent").getValue(String.class);
                     Integer tenant_type_int = dataSnapshot.child("details").child("tenant_type_int").getValue(Integer.class);
                     Integer type_of_space_int = dataSnapshot.child("details").child("type_of_space_int").getValue(Integer.class);
-                    String img1 = dataSnapshot.child("photos").child("1").child("imageUrl").getValue(String.class);
-                    String img2 = dataSnapshot.child("photos").child("2").child("imageUrl").getValue(String.class);
-                    String img3 = dataSnapshot.child("photos").child("3").child("imageUrl").getValue(String.class);
-                    String img4 = dataSnapshot.child("photos").child("4").child("imageUrl").getValue(String.class);
-                    String img5 = dataSnapshot.child("photos").child("5").child("imageUrl").getValue(String.class);
-                    String profile_pic = dataSnapshot.child("profile_pic").child("imageUrl").getValue(String.class);
+                    String img1 = dataSnapshot.child("details").child("pi41").getValue(String.class);
+                    String img2 = dataSnapshot.child("details").child("pi42").getValue(String.class);
+                    String img3 = dataSnapshot.child("details").child("pi43").getValue(String.class);
+                    String img4 = dataSnapshot.child("details").child("pi44").getValue(String.class);
+                    String img5 = dataSnapshot.child("details").child("p45").getValue(String.class);
+                    String profile_pic = dataSnapshot.child("details").child("ppi410").getValue(String.class);
 
                     try {
                         if (profile_pic.length()>=1){
@@ -254,7 +254,7 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                 deleteImage();
 
                 MessageHelper tempMessage = new MessageHelper();
-                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("photos").push()
+                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("details").child("photos").push()
                         .setValue(tempMessage, new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(DatabaseError databaseError,
@@ -485,13 +485,13 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                                             task.getResult().getDownloadUrl()
                                                     .toString());
                             if (i <= 5) {
-                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("photos").child("" + i).setValue(messageHelper);
-                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("photos_key").child("" + i).setValue(key);
-                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("photos_key").child("name" + i).setValue(uri.getLastPathSegment());
+                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("details").child("pi4"+i).setValue(messageHelper.getImageUrl());
+                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("details").child("pKey4" + i).setValue(key);
+                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("details").child("pName4" + i).setValue(uri.getLastPathSegment());
                             } else if (i == 10) {
-                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("profile_pic").setValue(messageHelper);
-                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("profile_pic_key").child("" + i).setValue(key);
-                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("profile_pic_key").child("name" + i).setValue(uri.getLastPathSegment());
+                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("details").child("ppi4"+i).setValue(messageHelper.getImageUrl());
+                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("details").child("ppkey4" + i).setValue(key);
+                                RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("details").child("ppname4" + i).setValue(uri.getLastPathSegment());
                             }
                             showImages(messageHelper.getImageUrl());
                         } else {
@@ -519,11 +519,11 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                 String imageName = "";
                 try{
                     if (i<=5){
-                        key = dataSnapshot.child("photos_key").child(""+i).getValue(String.class);
-                        imageName = dataSnapshot.child("photos_key").child("name"+i).getValue(String.class);
+                        key = dataSnapshot.child("details").child("pKey4"+i).getValue(String.class);
+                        imageName = dataSnapshot.child("details").child("pName4"+i).getValue(String.class);
                     }else if(i==10){
-                        key = dataSnapshot.child("profile_pic_key").child(""+i).getValue(String.class);
-                        imageName = dataSnapshot.child("profile_pic_key").child("name"+i).getValue(String.class);
+                        key = dataSnapshot.child("details").child("ppKey4"+i).getValue(String.class);
+                        imageName = dataSnapshot.child("details").child("ppName4"+i).getValue(String.class);
                     }
                     // Create a reference to the file to delete
                     StorageReference profileRef = storageReference.child(key).child(imageName);
