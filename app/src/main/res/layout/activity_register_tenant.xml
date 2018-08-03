@@ -19,7 +19,7 @@
         android:id="@+id/register_page"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         android:orientation="vertical">
 
         <TextView
@@ -94,14 +94,16 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:src="@drawable/user_default" />
-                                    <Button
+
+                                    <android.support.design.widget.FloatingActionButton
                                         android:id="@+id/dp_btn"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_alignParentEnd="true"
-                                        android:onClick="imgClick"
                                         android:layout_alignParentBottom="true"
-                                        android:text="Edit"/>
+                                        android:layout_alignParentEnd="true"                        android:layout_margin="@dimen/fab_margin"
+                                        android:onClick="imgClick"
+                                        app:srcCompat="@android:drawable/ic_menu_edit" />
+
                                 </RelativeLayout>
                             </android.support.design.circularreveal.cardview.CircularRevealCardView>
                         </RelativeLayout>

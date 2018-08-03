@@ -3,21 +3,27 @@ package com.subratgupta.rentoo;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -32,10 +38,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TenantHomeRegistered extends AppCompatActivity implements OwnerListRecyclerViewAdapter.ItemClickListener {
+public class TenantHomeReg extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, OwnerListRecyclerViewAdapter.ItemClickListener {
 
     public static String mode = "main";
     OwnerListRecyclerViewAdapter adapter;
+    ServiceListRecyclerViewAdapter serviceAdapter;
     public static boolean edit = false;
     Switch switchBtn;
     DatabaseReference db;
@@ -46,14 +54,16 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
     List<String> mCityList = new ArrayList<String>();
     List<String> mLocalList = new ArrayList<String>();
     List<String> ownerList;
+    List<ServiceDataType> serviceList;
     public static Property profile;
     String location;
     public static ArrayList<Property> propertyArrayList = new ArrayList<>();
+    public static ArrayList<ServiceDataType> serviceArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tenant_home_registered);
+        setContentView(R.layout.activity_tenant_home_reg);
 
         citySpinner = (Spinner) findViewById(R.id.cityList);
         localSpinner = (Spinner) findViewById(R.id.localList);
@@ -107,11 +117,14 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
         RegisterTenantNum.mDatabase.child("users").child(MainActivity.readData("user_id")).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String value = dataSnapshot.child("details").child("name").getValue(String.class);
+                String name = dataSnapshot.child("details").child("name").getValue(String.class);
+                String email = dataSnapshot.child("details").child("email").getValue(String.class);
                 String profile_url = dataSnapshot.child("profile_pic").child("imageUrl").getValue(String.class);
-                ((TextView) findViewById(R.id.name)).setText(value);
+                ((TextView) findViewById(R.id.name)).setText(name);
+                ((TextView)findViewById(R.id.nav_name)).setText(name);
+                ((TextView)findViewById(R.id.nav_email)).setText(email);
                 Glide.with(getApplicationContext()).load(profile_url).into((ImageView) findViewById(R.id.profile_pic));
-
+                Glide.with(getApplicationContext()).load(profile_url).into((ImageView) findViewById(R.id.imageView));
                 if(dataSnapshot.child("status").getValue(Boolean.class)!=null){
                     if(dataSnapshot.child("status").getValue(Boolean.class)){
                         switchBtn.setChecked(true);
@@ -131,7 +144,29 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
         });
 
         builder = new AlertDialog.Builder(this);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
+
     private void cityFill() {
         RegisterTenantNum.mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -149,7 +184,7 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
 
                 mCityList = cityList;
 
-                ArrayAdapter<String> citysAdapter = new ArrayAdapter<String>(TenantHomeRegistered.this, android.R.layout.simple_spinner_item, cityList);
+                ArrayAdapter<String> citysAdapter = new ArrayAdapter<String>(TenantHomeReg.this, android.R.layout.simple_spinner_item, cityList);
                 citysAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 citySpinner.setAdapter(citysAdapter);
             }
@@ -180,7 +215,7 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
 
                 mLocalList = localList;
 
-                ArrayAdapter<String> localsAdapter = new ArrayAdapter<String>(TenantHomeRegistered.this, android.R.layout.simple_spinner_item, localList);
+                ArrayAdapter<String> localsAdapter = new ArrayAdapter<String>(TenantHomeReg.this, android.R.layout.simple_spinner_item, localList);
                 localsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 localSpinner.setAdapter(localsAdapter);
 
@@ -219,10 +254,57 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
                     }
                 }
                 RecyclerView recyclerView = findViewById(R.id.owner_list);
-                recyclerView.setLayoutManager(new LinearLayoutManager(TenantHomeRegistered.this));
-                adapter = new OwnerListRecyclerViewAdapter(TenantHomeRegistered.this, propertyArrayList);
-                adapter.setClickListener(TenantHomeRegistered.this);
+                recyclerView.setLayoutManager(new LinearLayoutManager(TenantHomeReg.this));
+                adapter = new OwnerListRecyclerViewAdapter(TenantHomeReg.this, propertyArrayList);
+                adapter.setClickListener(TenantHomeReg.this);
                 recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "databaseError", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void ServiceListFetch(String type, final RecyclerView recycle) {
+        final String mType = type;
+        RegisterTenantNum.mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                serviceArrayList.clear();
+                // Is better to use a List, because you don't know the size
+                // of the iterator returned by dataSnapshot.getChildren() to
+                // initialize the array
+                serviceList = new ArrayList<ServiceDataType>();
+
+                for (DataSnapshot locationIDs : dataSnapshot.child("users").getChildren()) {
+                    ServiceDataType id = locationIDs.child("details").getValue(ServiceDataType.class);
+
+                    try {
+                        if (id.getType_of_service().equals(mType)){
+                            serviceList.add(id);
+                        }
+                    }
+                    catch (Exception e){
+                        Toast.makeText(getApplicationContext(),"Err",Toast.LENGTH_SHORT);
+                    }
+
+                }
+
+                for (int i = 0; i < serviceList.size(); i++) {
+                    try {
+                        ServiceDataType mServiceList = serviceList.get(i);
+                        serviceArrayList.add(mServiceList);
+                    } catch (Exception e) {
+                        Log.e("tenhomepage", e.getMessage());
+                    }
+                }
+                RecyclerView recyclerView = recycle;
+                recyclerView.setLayoutManager(new LinearLayoutManager(TenantHomeReg.this));
+                serviceAdapter = new ServiceListRecyclerViewAdapter(TenantHomeReg.this, serviceArrayList);
+                serviceAdapter.setClickListener(TenantHomeReg.this);
+                recyclerView.setAdapter(serviceAdapter);
             }
 
             @Override
@@ -255,9 +337,9 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
                     }
                 }
                 RecyclerView recyclerView = findViewById(R.id.short_list);
-                recyclerView.setLayoutManager(new LinearLayoutManager(TenantHomeRegistered.this));
-                adapter = new OwnerListRecyclerViewAdapter(TenantHomeRegistered.this, propertyArrayList);
-                adapter.setClickListener(TenantHomeRegistered.this);
+                recyclerView.setLayoutManager(new LinearLayoutManager(TenantHomeReg.this));
+                adapter = new OwnerListRecyclerViewAdapter(TenantHomeReg.this, propertyArrayList);
+                adapter.setClickListener(TenantHomeReg.this);
                 recyclerView.setAdapter(adapter);
             }
 
@@ -278,49 +360,23 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.sign_out_menu:
-                //signout
-                RegisterTenantNum.mAuth.signOut();
-                MainActivity.editor = MainActivity.sharedPref.edit();
-                MainActivity.editor.clear();
-                MainActivity.editor.apply();
-                Intent goToHome = new Intent(this, MainActivity.class);
-                startActivity(goToHome);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    public void register(View view) {
-        Intent goToRegisterNum = new Intent(this, RegisterTenantNum.class);
-        startActivity(goToRegisterNum);
-    }
-
-    @Override
     public void onBackPressed() {
-        switch(mode){
-            case "main":
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            if (mode.equals("main")) {
                 AlertDialog.Builder builder;
                 builder = new AlertDialog.Builder(this);
 
-                builder.setMessage("msg") .setTitle("title");
+                builder.setMessage("msg").setTitle("title");
 
                 //Setting message manually and performing action on button click
                 builder.setMessage("Do you sure to exit?")
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Intent _intentOBJ= new Intent(Intent.ACTION_MAIN);
+                                Intent _intentOBJ = new Intent(Intent.ACTION_MAIN);
                                 _intentOBJ.addCategory(Intent.CATEGORY_HOME);
                                 _intentOBJ.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 _intentOBJ.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -338,20 +394,132 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
                 //Setting the title manually
                 alert.setTitle("Exit");
                 alert.show();
-                break;
-            case "search":
+            } else {
                 findViewById(R.id.profile).setVisibility(View.VISIBLE);
                 findViewById(R.id.search_page).setVisibility(View.GONE);
                 findViewById(R.id.search_page).setVisibility(View.GONE);
                 mode = "main";
-                break;
-            case "short":
-                findViewById(R.id.profile).setVisibility(View.VISIBLE);
-                findViewById(R.id.search_page).setVisibility(View.GONE);
-                findViewById(R.id.shortlist_page).setVisibility(View.GONE);
-                mode = "main";
-                break;
+            }
         }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    public void register(View view) {
+        Intent goToRegisterNum = new Intent(this, RegisterTenantNum.class);
+        startActivity(goToRegisterNum);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        switch (item.getItemId()){
+            case R.id.sign_out_menu:
+                //signout
+                RegisterTenantNum.mAuth.signOut();
+                MainActivity.editor = MainActivity.sharedPref.edit();
+                MainActivity.editor.clear();
+                MainActivity.editor.apply();
+                Intent goToHome = new Intent(this, MainActivity.class);
+                startActivity(goToHome);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+
+        findViewById(R.id.profile).setVisibility(View.GONE);
+        findViewById(R.id.search_page).setVisibility(View.GONE);
+        findViewById(R.id.search_page).setVisibility(View.GONE);
+        findViewById(R.id.rental_plans).setVisibility(View.GONE);
+        findViewById(R.id.food).setVisibility(View.GONE);
+        findViewById(R.id.movers_n_packers).setVisibility(View.GONE);
+        findViewById(R.id.furniture_rent).setVisibility(View.GONE);
+        findViewById(R.id.feedback).setVisibility(View.GONE);
+        findViewById(R.id.faq).setVisibility(View.GONE);
+        findViewById(R.id.about_us).setVisibility(View.GONE);
+        findViewById(R.id.investors).setVisibility(View.GONE);
+        findViewById(R.id.contact_us).setVisibility(View.GONE);
+
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+
+            findViewById(R.id.profile).setVisibility(View.VISIBLE);
+            mode = "main";
+
+        }else if (id == R.id.nav_rental_plans) {
+
+            findViewById(R.id.rental_plans).setVisibility(View.VISIBLE);
+            mode = "something else";
+
+        } else if (id == R.id.nav_food) {
+
+            findViewById(R.id.food).setVisibility(View.VISIBLE);
+            mode = "something else";
+            ServiceListFetch("Food Tiffin",(RecyclerView) findViewById(R.id.food_service_list));
+
+        } else if (id == R.id.nav_movers_n_packers) {
+
+            findViewById(R.id.movers_n_packers).setVisibility(View.VISIBLE);
+            ServiceListFetch("Movers and Packers",(RecyclerView) findViewById(R.id.movers_n_packers_list));
+
+        } else if (id == R.id.nav_furniture_rent) {
+
+            findViewById(R.id.furniture_rent).setVisibility(View.VISIBLE);
+            ServiceListFetch("Furniture Rent",(RecyclerView) findViewById(R.id.furniture_rent_list));
+
+        } else if (id == R.id.nav_feedback) {
+
+            findViewById(R.id.feedback).setVisibility(View.VISIBLE);
+            mode = "something else";
+
+        } else if (id == R.id.nav_faq) {
+
+            findViewById(R.id.faq).setVisibility(View.VISIBLE);
+            mode = "something else";
+
+        } else if (id == R.id.nav_about_us) {
+
+            findViewById(R.id.about_us).setVisibility(View.VISIBLE);
+            mode = "something else";
+
+        } else if (id == R.id.nav_investors){
+
+            findViewById(R.id.investors).setVisibility(View.VISIBLE);
+            mode = "something else";
+
+        } else if (id == R.id.nav_contact_us){
+
+            findViewById(R.id.contact_us).setVisibility(View.VISIBLE);
+            mode = "something else";
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     public void tonClick(View view) {
@@ -359,11 +527,13 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
         if(switchBtn.isChecked()){
             switchBtn.setText("Active");
             db.child("status").setValue(true);
+            RegisterTenantNum.mDatabase.child("room_mates").child(MainActivity.readData("user_id")).setValue(MainActivity.readData("user_id"));
         }
         else {
             switchBtn.setText("Snoozed");
             db.child("status").setValue(false);
             switchBtn.setChecked(false);
+            RegisterTenantNum.mDatabase.child("room_mates").child(MainActivity.readData("user_id")).removeValue();
         }
     }
 
@@ -387,4 +557,3 @@ public class TenantHomeRegistered extends AppCompatActivity implements OwnerList
         shortListFetch();
     }
 }
-

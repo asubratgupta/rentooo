@@ -32,12 +32,15 @@
         <activity android:name=".RegisterTenant" />
         <activity android:name=".RegisterTenantNum" />
         <activity android:name=".TenantHomePage" />
-        <activity android:name=".TenantHomeRegistered" />
         <activity android:name=".OwnerViewByTenant" />
         <activity android:name=".InterestedProfilesOnOwner" />
         <activity android:name=".ServiceProviderActivity" />
         <activity android:name=".RegisterService" />
-        <activity android:name=".RoomView"></activity>
+        <activity android:name=".RoomView" />
+        <activity
+            android:name=".TenantHomeReg"
+            android:label="@string/title_activity_tenant_home_reg"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

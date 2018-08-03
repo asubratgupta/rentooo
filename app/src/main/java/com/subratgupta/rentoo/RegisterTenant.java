@@ -164,7 +164,7 @@ public class RegisterTenant extends AppCompatActivity {
     }
 
     private void goTo() {
-        Intent goToOwnerHomePage = new Intent(this, TenantHomeRegistered.class);
+        Intent goToOwnerHomePage = new Intent(this, TenantHomeReg.class);
         startActivity(goToOwnerHomePage);
     }
 
