@@ -25,6 +25,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -32,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,11 +61,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class RegisterOwnerProperty extends AppCompatActivity {
     Boolean clickAbility = true;
+    Boolean locationFilled = false;
     Uri uri_parent;
     private static final int REQUEST_IMAGE = 1;
     private static final int REQUEST_INVITE = 1;
@@ -74,7 +80,13 @@ public class RegisterOwnerProperty extends AppCompatActivity {
     ImageView image;
     LinearLayout linearLayout;
 
+    Spinner citySpinner;
+    Spinner localSpinner;
+    List<String> mCityList = new ArrayList<String>();
+    List<String> mLocalList = new ArrayList<String>();
+    String location;
 
+    public static String city, localArea;
 
     private int i;
     private RadioGroup mTypeOfSpace;
@@ -102,6 +114,47 @@ public class RegisterOwnerProperty extends AppCompatActivity {
         mTypeOfSpace = (RadioGroup) findViewById(R.id.type_radio);
         mFacilities = (RadioGroup) findViewById(R.id.facilities_radio);
         mTenantType = (RadioGroup) findViewById(R.id.tenant_type_radio);
+
+
+        citySpinner = (Spinner) findViewById(R.id.cityList);
+        localSpinner = (Spinner) findViewById(R.id.localList);
+
+        cityFill();
+
+        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String tempCity = mCityList.get((int) id);
+                city = tempCity;
+                localFill(tempCity);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        localSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position>0){
+                    location = mLocalList.get((int) id);
+                    localArea = location;
+                    locationFilled = true;
+                }
+                else{
+                    locationFilled = false;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         try {
             RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -204,6 +257,68 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                 findViewById(R.id.skip_btn).setVisibility(View.GONE);
             }
         });
+    }
+
+    private void cityFill() {
+        RegisterOwnerNumber.mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Is better to use a List, because you don't know the size
+                // of the iterator returned by dataSnapshot.getChildren() to
+                // initialize the array
+                final List<String> cityList = new ArrayList<String>();
+                cityList.add("Choose a city");
+
+                for (DataSnapshot citySnapshot : dataSnapshot.child("cityList").getChildren()) {
+                    String city = citySnapshot.getValue(String.class);
+                    cityList.add(city);
+                }
+
+                mCityList = cityList;
+
+                ArrayAdapter<String> citysAdapter = new ArrayAdapter<String>(RegisterOwnerProperty.this, android.R.layout.simple_spinner_item, cityList);
+                citysAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                citySpinner.setAdapter(citysAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "databaseError", Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    private void localFill(String city) {
+        final String mCity = city;
+        RegisterOwnerNumber.mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Is better to use a List, because you don't know the size
+                // of the iterator returned by dataSnapshot.getChildren() to
+                // initialize the array
+                final List<String> localList = new ArrayList<String>();
+                localList.add("Choose Local Area");
+
+                for (DataSnapshot localSnapshot : dataSnapshot.child("localList").child(mCity).getChildren()) {
+                    String local = localSnapshot.getValue(String.class);
+                    localList.add(local);
+                }
+
+                mLocalList = localList;
+
+                ArrayAdapter<String> localsAdapter = new ArrayAdapter<String>(RegisterOwnerProperty.this, android.R.layout.simple_spinner_item, localList);
+                localsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                localSpinner.setAdapter(localsAdapter);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "databaseError", Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     @Override
@@ -564,29 +679,37 @@ public class RegisterOwnerProperty extends AppCompatActivity {
 
     public void onClick(View view) {
 
-        try {
-            DatabaseReference db = RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("details");
-            int selectedId = mTypeOfSpace.getCheckedRadioButtonId();
-            radioButton = (RadioButton) findViewById(selectedId);
-            db.child("type_of_space").setValue(radioButton.getText().toString());
-            db.child("type_of_space_int").setValue(radioButton.getId());
-            selectedId = mFacilities.getCheckedRadioButtonId();
-            radioButton = (RadioButton) findViewById(selectedId);
-            db.child("facilities").setValue(radioButton.getText().toString());
-            db.child("facilities_int").setValue(radioButton.getId());
-            selectedId = mTenantType.getCheckedRadioButtonId();
-            radioButton = (RadioButton) findViewById(selectedId);
-            db.child("tenant_type").setValue(radioButton.getText().toString());
-            db.child("tenant_type_int").setValue(radioButton.getId());
-            db.child("name").setValue(mNameField.getText().toString());
-            db.child("address").setValue(mAddressField.getText().toString());
-            db.child("phone").setValue(mPhoneNumberField.getText().toString());
-            db.child("email").setValue(mEmailField.getText().toString());
-            db.child("rent").setValue(mRentField.getText().toString());
-            db.child("isComplete").setValue("true");
-            goTo();
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Please fill all details.", Toast.LENGTH_LONG).show();
+        if (locationFilled){
+            try {
+                DatabaseReference db = RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id")).child("details");
+                int selectedId = mTypeOfSpace.getCheckedRadioButtonId();
+                radioButton = (RadioButton) findViewById(selectedId);
+                db.child("type_of_space").setValue(radioButton.getText().toString());
+                db.child("type_of_space_int").setValue(radioButton.getId());
+                selectedId = mFacilities.getCheckedRadioButtonId();
+                radioButton = (RadioButton) findViewById(selectedId);
+                db.child("facilities").setValue(radioButton.getText().toString());
+                db.child("facilities_int").setValue(radioButton.getId());
+                selectedId = mTenantType.getCheckedRadioButtonId();
+                radioButton = (RadioButton) findViewById(selectedId);
+                db.child("tenant_type").setValue(radioButton.getText().toString());
+                db.child("tenant_type_int").setValue(radioButton.getId());
+                db.child("name").setValue(mNameField.getText().toString());
+                db.child("address").setValue(mAddressField.getText().toString());
+                db.child("phone").setValue(mPhoneNumberField.getText().toString());
+                db.child("email").setValue(mEmailField.getText().toString());
+                db.child("rent").setValue(mRentField.getText().toString());
+                db.child("isComplete").setValue("true");
+                db.child("city").setValue(city);
+                db.child("local").setValue(localArea);
+                RegisterOwnerNumber.mDatabase.child("locationSpecifiedID").child(localArea).child(MainActivity.readData("user_id")).setValue(MainActivity.readData("user_id"));
+                goTo();
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Please fill all details.", Toast.LENGTH_LONG).show();
+            }
+        }
+        else {
+            Toast.makeText(getApplicationContext(),"Please Select City, Area and fill All Details.",Toast.LENGTH_LONG).show();
         }
     }
 

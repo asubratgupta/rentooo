@@ -531,13 +531,13 @@ public class TenantHomeReg extends AppCompatActivity
         if(switchBtn.isChecked()){
             switchBtn.setText("Active");
             db.child("status").setValue(true);
-            RegisterTenantNum.mDatabase.child("room_mates").child(MainActivity.readData("user_id")).setValue(MainActivity.readData("user_id"));
+            RegisterTenantNum.mDatabase.child("locationSpecifiedTenant").child(RegisterTenant.localArea).child(MainActivity.readData("user_id")).setValue(MainActivity.readData("user_id"));
         }
         else {
             switchBtn.setText("Snoozed");
             db.child("status").setValue(false);
             switchBtn.setChecked(false);
-            RegisterTenantNum.mDatabase.child("room_mates").child(MainActivity.readData("user_id")).removeValue();
+            RegisterTenantNum.mDatabase.child("locationSpecifiedTenant").child(RegisterTenant.localArea).child(MainActivity.readData("user_id")).setValue(null);
         }
     }
 

@@ -223,6 +223,19 @@
                                 android:padding="5dp" />
                         </LinearLayout>
 
+                        <Spinner
+                            android:id="@+id/cityList"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp" />
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"/>
+
+                        <Spinner
+                            android:id="@+id/localList"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp" />
 
                     </LinearLayout>
 

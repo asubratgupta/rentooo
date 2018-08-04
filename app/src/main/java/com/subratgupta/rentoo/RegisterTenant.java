@@ -19,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -26,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +51,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -72,6 +77,15 @@ public class RegisterTenant extends AppCompatActivity {
     public static DatabaseReference mDatabase;
     private static final String LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif";
 
+    Spinner citySpinner;
+    Spinner localSpinner;
+    List<String> mCityList = new ArrayList<String>();
+    List<String> mLocalList = new ArrayList<String>();
+    String location;
+    Boolean locationFilled = false;
+
+    public static String city, localArea;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +99,46 @@ public class RegisterTenant extends AppCompatActivity {
         mPhoneNumberField.setText(MainActivity.readData("contact_number"));
 
         mMaritalStatus = (RadioGroup) findViewById(R.id.marital_radio);
+
+        citySpinner = (Spinner) findViewById(R.id.cityList);
+        localSpinner = (Spinner) findViewById(R.id.localList);
+
+        cityFill();
+
+        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String tempCity = mCityList.get((int) id);
+                city = tempCity;
+                localFill(tempCity);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        localSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position>0){
+                    location = mLocalList.get((int) id);
+                    localArea = location;
+                    locationFilled = true;
+                }
+                else{
+                    locationFilled = false;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         if (savedInstanceState != null) {
             onRestoreInstanceState(savedInstanceState);
@@ -163,6 +217,68 @@ public class RegisterTenant extends AppCompatActivity {
         }
     }
 
+    private void cityFill() {
+        RegisterTenantNum.mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Is better to use a List, because you don't know the size
+                // of the iterator returned by dataSnapshot.getChildren() to
+                // initialize the array
+                final List<String> cityList = new ArrayList<String>();
+                cityList.add("Choose a city");
+
+                for (DataSnapshot citySnapshot : dataSnapshot.child("cityList").getChildren()) {
+                    String city = citySnapshot.getValue(String.class);
+                    cityList.add(city);
+                }
+
+                mCityList = cityList;
+
+                ArrayAdapter<String> citysAdapter = new ArrayAdapter<String>(RegisterTenant.this, android.R.layout.simple_spinner_item, cityList);
+                citysAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                citySpinner.setAdapter(citysAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "databaseError", Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    private void localFill(String city) {
+        final String mCity = city;
+        RegisterTenantNum.mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Is better to use a List, because you don't know the size
+                // of the iterator returned by dataSnapshot.getChildren() to
+                // initialize the array
+                final List<String> localList = new ArrayList<String>();
+                localList.add("Choose Local Area");
+
+                for (DataSnapshot localSnapshot : dataSnapshot.child("localList").child(mCity).getChildren()) {
+                    String local = localSnapshot.getValue(String.class);
+                    localList.add(local);
+                }
+
+                mLocalList = localList;
+
+                ArrayAdapter<String> localsAdapter = new ArrayAdapter<String>(RegisterTenant.this, android.R.layout.simple_spinner_item, localList);
+                localsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                localSpinner.setAdapter(localsAdapter);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "databaseError", Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
     private void goTo() {
         Intent goToOwnerHomePage = new Intent(this, TenantHomeReg.class);
         startActivity(goToOwnerHomePage);
@@ -183,7 +299,8 @@ public class RegisterTenant extends AppCompatActivity {
                 break;
 
             case R.id.submit:
-                try {
+                if (locationFilled){
+                    try {
                     DatabaseReference db = RegisterTenantNum.mDatabase.child("users").child(MainActivity.readData("user_id")).child("details");
                     int selectedId = mMaritalStatus.getCheckedRadioButtonId();
                     radioButton = (RadioButton) findViewById(selectedId);
@@ -196,11 +313,17 @@ public class RegisterTenant extends AppCompatActivity {
                     db.child("occupation").setValue(mOccupationField.getText().toString());
                     db.child("email").setValue(mEmailField.getText().toString());
                     db.child("isComplete").setValue("true");
+                    db.child("city").setValue(city);
+                    db.child("local").setValue(localArea);
                     goTo();
                 } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), e.getCause() + "Please fill all details.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Please fill all details.", Toast.LENGTH_LONG).show();
                 }
                 break;
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),"Please Select City, Area and fill All Details.",Toast.LENGTH_LONG).show();
+                }
         }
     }
 

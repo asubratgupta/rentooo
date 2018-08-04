@@ -53,14 +53,17 @@ public class SettingsActivity extends AppCompatActivity {
                                 switch (MainActivity.readData("type")) {
                                     case "owner":
                                         db = RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id"));
+                                        RegisterOwnerNumber.mDatabase.child("locationSpecifiedService").child(RegisterOwnerProperty.localArea).child(MainActivity.readData("user_id")).setValue(null);
                                         mAuth = RegisterOwnerNumber.mAuth;
                                         break;
                                     case "tenant":
                                         db = RegisterTenantNum.mDatabase.child("users").child(MainActivity.readData("user_id"));
+                                        RegisterTenantNum.mDatabase.child("locationSpecifiedService").child(RegisterTenant.localArea).child(MainActivity.readData("user_id")).setValue(null);
                                         mAuth = RegisterTenantNum.mAuth;
                                         break;
                                     case "service_provider":
-                                        db = RegisterService.mDatabase.child("users").child(MainActivity.readData("user_id"));
+                                        db = ServiceProviderActivity.mDatabase.child("users").child(MainActivity.readData("user_id"));
+                                        ServiceProviderActivity.mDatabase.child("locationSpecifiedService").child(RegisterService.localArea).child(MainActivity.readData("user_id")).setValue(null);
                                         mAuth = ServiceProviderActivity.mAuth;
                                         break;
                                     default:
