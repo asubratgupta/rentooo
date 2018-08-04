@@ -104,4 +104,13 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent _intentOBJ= new Intent(Intent.ACTION_MAIN);
+        _intentOBJ.addCategory(Intent.CATEGORY_HOME);
+        _intentOBJ.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        _intentOBJ.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getApplicationContext().startActivity(_intentOBJ);
+    }
 }

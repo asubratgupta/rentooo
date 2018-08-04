@@ -439,6 +439,10 @@ public class TenantHomeReg extends AppCompatActivity
                 Intent goToHome = new Intent(this, MainActivity.class);
                 startActivity(goToHome);
                 return true;
+            case R.id.settings_menu:
+                Intent goToSettings = new Intent(this, SettingsActivity.class);
+                startActivity(goToSettings);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -62,7 +62,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Name of premises:- "
+                            android:text="Name of Business:- "
                             android:textSize="18sp" />
 
                         <EditText
@@ -181,17 +181,52 @@
                     android:onClick="onClick"
                     android:text="@string/submit" />
 
-                <Button
-                    android:id="@+id/skip_btn"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:onClick="skip"
-                    style="@style/ButtonStyle"
-                    android:layout_alignParentEnd="true"
-                    android:text="Skip"/>
-
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+    <LinearLayout
+        android:id="@+id/registered_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/service_registered"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:id="@+id/textLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:text="\nDo you wanna change it?"/>
+
+        <LinearLayout
+            android:id="@+id/yes_no_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:visibility="gone"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/yes"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:onClick="yesNoClick"
+                android:text="Yes"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/no"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:onClick="yesNoClick"
+                android:text="No"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>

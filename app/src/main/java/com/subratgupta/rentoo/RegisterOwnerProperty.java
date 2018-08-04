@@ -74,6 +74,8 @@ public class RegisterOwnerProperty extends AppCompatActivity {
     ImageView image;
     LinearLayout linearLayout;
 
+
+
     private int i;
     private RadioGroup mTypeOfSpace;
     private RadioGroup mFacilities;
@@ -222,6 +224,10 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                 MainActivity.editor.apply();
                 Intent goToHome = new Intent(this, MainActivity.class);
                 startActivity(goToHome);
+                return true;
+            case R.id.settings_menu:
+                Intent goToSettings = new Intent(this, SettingsActivity.class);
+                startActivity(goToSettings);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
