@@ -18,6 +18,8 @@ public class Property {
     private String pi45;
     private String ppi410;
     private String naming;
+    private String city;
+    private String local;
 
 
     public Property() {
@@ -75,5 +77,12 @@ public class Property {
     public String getRent() {
         return rent;
     }
+    public String getCity() {
+        return city;
+    }
+    public String getLocal() {
+        return local;
+    }
+
 
 }

@@ -199,7 +199,13 @@ public class RegisterTenant extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String value = dataSnapshot.getValue(String.class);
                     if (Objects.equals(value, "true")) {
-                        goTo();
+                        if (!TenantHomeReg.edit)
+                        {
+                            goTo();
+                        }
+                        else {
+                            findViewById(R.id.register_page).setVisibility(View.VISIBLE);
+                            findViewById(R.id.progress_bar).setVisibility(View.GONE);                        }
                     } else {
                         findViewById(R.id.register_page).setVisibility(View.VISIBLE);
                         findViewById(R.id.progress_bar).setVisibility(View.GONE);

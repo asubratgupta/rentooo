@@ -7,6 +7,9 @@ public class ServiceDataType {
     private String type_of_service;
     private String getType_of_service_int;
     private String phone;
+    private String city;
+    private String local;
+
 
     public ServiceDataType() {
     }
@@ -20,5 +23,8 @@ public class ServiceDataType {
     }
     public String getGetType_of_service_int() {return getType_of_service_int;}
     public String getPhone() {return phone;}
+    public String getCity() {return city;}
+    public String getLocal() {return local;}
+
 
 }

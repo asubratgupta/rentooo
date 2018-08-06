@@ -53,17 +53,29 @@ public class SettingsActivity extends AppCompatActivity {
                                 switch (MainActivity.readData("type")) {
                                     case "owner":
                                         db = RegisterOwnerNumber.mDatabase.child("users").child(MainActivity.readData("user_id"));
-                                        RegisterOwnerNumber.mDatabase.child("locationSpecifiedService").child(RegisterOwnerProperty.localArea).child(MainActivity.readData("user_id")).setValue(null);
+                                        try {
+                                            RegisterOwnerNumber.mDatabase.child("locationSpecifiedID").child(RegisterOwnerProperty.localArea).child(MainActivity.readData("user_id")).setValue(null);
+                                        } catch (Exception e) {
+                                            Log.e("DeleteAccount", e.getMessage());
+                                        }
                                         mAuth = RegisterOwnerNumber.mAuth;
                                         break;
                                     case "tenant":
                                         db = RegisterTenantNum.mDatabase.child("users").child(MainActivity.readData("user_id"));
-                                        RegisterTenantNum.mDatabase.child("locationSpecifiedService").child(RegisterTenant.localArea).child(MainActivity.readData("user_id")).setValue(null);
+                                        try {
+                                            RegisterTenantNum.mDatabase.child("locationSpecifiedTenant").child(RegisterTenant.localArea).child(MainActivity.readData("user_id")).setValue(null);
+                                        } catch (Exception e) {
+                                            Log.e("DeleteAccount", e.getMessage());
+                                        }
                                         mAuth = RegisterTenantNum.mAuth;
                                         break;
                                     case "service_provider":
                                         db = ServiceProviderActivity.mDatabase.child("users").child(MainActivity.readData("user_id"));
-                                        ServiceProviderActivity.mDatabase.child("locationSpecifiedService").child(RegisterService.localArea).child(MainActivity.readData("user_id")).setValue(null);
+                                        try {
+                                            ServiceProviderActivity.mDatabase.child("locationSpecifiedService").child(RegisterService.localArea).child(MainActivity.readData("user_id")).setValue(null);
+                                        } catch (Exception e) {
+                                            Log.e("DeleteAccount", e.getMessage());
+                                        }
                                         mAuth = ServiceProviderActivity.mAuth;
                                         break;
                                     default:

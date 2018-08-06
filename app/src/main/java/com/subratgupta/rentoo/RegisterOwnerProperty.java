@@ -702,7 +702,6 @@ public class RegisterOwnerProperty extends AppCompatActivity {
                 db.child("isComplete").setValue("true");
                 db.child("city").setValue(city);
                 db.child("local").setValue(localArea);
-                RegisterOwnerNumber.mDatabase.child("locationSpecifiedID").child(localArea).child(MainActivity.readData("user_id")).setValue(MainActivity.readData("user_id"));
                 goTo();
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), "Please fill all details.", Toast.LENGTH_LONG).show();

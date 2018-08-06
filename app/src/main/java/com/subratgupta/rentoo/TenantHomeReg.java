@@ -24,6 +24,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -39,10 +41,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TenantHomeReg extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OwnerListRecyclerViewAdapter.ItemClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OwnerListRecyclerViewAdapter.ItemClickListener, InterestedProfileListRecyclerViewAdapter.ItemClickListener {
 
+    RadioGroup mSearchType;
+    RadioButton radioButton;
+    int choice;
+    Button mSearchButton;
     public static String mode = "main";
     OwnerListRecyclerViewAdapter adapter;
+    InterestedProfileListRecyclerViewAdapter tenantAdapter;
     ServiceListRecyclerViewAdapter serviceAdapter;
     public static boolean edit = false;
     Switch switchBtn;
@@ -54,10 +61,14 @@ public class TenantHomeReg extends AppCompatActivity
     List<String> mCityList = new ArrayList<String>();
     List<String> mLocalList = new ArrayList<String>();
     List<String> ownerList;
+    List<Property> roomList;
+    List<TenantDataType> flatMateList;
     List<ServiceDataType> serviceList;
     public static Property profile;
-    String location;
+    String local;
+    String city;
     public static ArrayList<Property> propertyArrayList = new ArrayList<>();
+    public static ArrayList<TenantDataType> tenantArrayList = new ArrayList<>();
     public static ArrayList<ServiceDataType> serviceArrayList = new ArrayList<>();
 
     @Override
@@ -67,7 +78,7 @@ public class TenantHomeReg extends AppCompatActivity
 
         citySpinner = (Spinner) findViewById(R.id.cityList);
         localSpinner = (Spinner) findViewById(R.id.localList);
-        switchBtn= (Switch) findViewById(R.id.switch1);
+        switchBtn = (Switch) findViewById(R.id.switch1);
 
         cityFill();
 
@@ -76,6 +87,7 @@ public class TenantHomeReg extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String tempCity = mCityList.get((int) id);
+                city = tempCity;
                 localFill(tempCity);
             }
 
@@ -85,15 +97,15 @@ public class TenantHomeReg extends AppCompatActivity
             }
         });
 
-        final Button mSearchButton = (Button) findViewById(R.id.search_btn);
+        mSearchButton = (Button) findViewById(R.id.search_btn);
         mSearchButton.setEnabled(false);
 
         localSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position>0){
-                    location = mLocalList.get((int) id);
+                if (position > 0) {
+                    local = mLocalList.get((int) id);
                     mSearchButton.setEnabled(true);
                 }
             }
@@ -104,39 +116,37 @@ public class TenantHomeReg extends AppCompatActivity
             }
         });
 
-        mSearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ownerListFetch();
-            }
-        });
-
         db = RegisterTenantNum.mDatabase.child("users").child(MainActivity.readData("user_id"));
-        switchBtn= (Switch) findViewById(R.id.switch1);
+        switchBtn = (Switch) findViewById(R.id.switch1);
 
         RegisterTenantNum.mDatabase.child("users").child(MainActivity.readData("user_id")).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String name = dataSnapshot.child("details").child("name").getValue(String.class);
-                String email = dataSnapshot.child("details").child("email").getValue(String.class);
-                String profile_url = dataSnapshot.child("profile_pic").child("imageUrl").getValue(String.class);
-                ((TextView) findViewById(R.id.name)).setText(name);
-                ((TextView)findViewById(R.id.nav_name)).setText(name);
-                ((TextView)findViewById(R.id.nav_email)).setText(email);
-                Glide.with(getApplicationContext()).load(profile_url).into((ImageView) findViewById(R.id.profile_pic));
-                Glide.with(getApplicationContext()).load(profile_url).into((ImageView) findViewById(R.id.imageView));
-                if(dataSnapshot.child("status").getValue(Boolean.class)!=null){
-                    if(dataSnapshot.child("status").getValue(Boolean.class)){
-                        switchBtn.setChecked(true);
-                        switchBtn.setText("Active");
+
+                try {
+                    String name = dataSnapshot.child("details").child("name").getValue(String.class);
+                    String email = dataSnapshot.child("details").child("email").getValue(String.class);
+                    String profile_url = dataSnapshot.child("profile_pic").child("imageUrl").getValue(String.class);
+                    ((TextView) findViewById(R.id.name)).setText(name);
+                    ((TextView) findViewById(R.id.nav_name)).setText(name);
+                    ((TextView) findViewById(R.id.nav_email)).setText(email);
+                    Glide.with(getApplicationContext()).load(profile_url).into((ImageView) findViewById(R.id.profile_pic));
+                    Glide.with(getApplicationContext()).load(profile_url).into((ImageView) findViewById(R.id.imageView));
+                    if (dataSnapshot.child("status").getValue(Boolean.class) != null) {
+                        if (dataSnapshot.child("status").getValue(Boolean.class)) {
+                            switchBtn.setChecked(true);
+                            switchBtn.setText("Active");
+                        } else {
+                            switchBtn.setChecked(false);
+                            switchBtn.setText("Snoozed");
+                        }
                     }
-                    else {
-                        switchBtn.setChecked(false);
-                        switchBtn.setText("Snoozed");
-                    }
+                } catch (Exception e) {
+                    Log.e("TenantHomeReg", e.getMessage());
                 }
 
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 findViewById(R.id.reg_view).setVisibility(View.GONE);
@@ -229,7 +239,7 @@ public class TenantHomeReg extends AppCompatActivity
 
     }
 
-    private void ownerListFetch() {
+ /*   private void ownerListFetch() {
         RegisterTenantNum.mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -238,9 +248,10 @@ public class TenantHomeReg extends AppCompatActivity
                 // of the iterator returned by dataSnapshot.getChildren() to
                 // initialize the array
                 ownerList = new ArrayList<String>();
-
-                for (DataSnapshot locationIDs : dataSnapshot.child("locationSpecifiedID").child(location).getChildren()) {
+                Toast.makeText(getApplicationContext(),local,Toast.LENGTH_SHORT).show();
+                for (DataSnapshot locationIDs : dataSnapshot.child("locationSpecifiedID").child(local).getChildren()) {
                     String id = locationIDs.getValue(String.class);
+                    Toast.makeText(getApplicationContext(),local+"2nd",Toast.LENGTH_SHORT).show();
                     ownerList.add(id);
                 }
 
@@ -265,10 +276,12 @@ public class TenantHomeReg extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), "databaseError", Toast.LENGTH_LONG).show();
             }
         });
-    }
+    }*/
 
-    private void ServiceListFetch(String type, final RecyclerView recycle) {
+    private void ServiceListFetch(String type, String city, String local, final RecyclerView recycle) {
         final String mType = type;
+        final String mCity = city;
+        final String mLocal = local;
         RegisterTenantNum.mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -282,12 +295,15 @@ public class TenantHomeReg extends AppCompatActivity
                     ServiceDataType id = locationIDs.child("details").getValue(ServiceDataType.class);
 
                     try {
-                        if (id.getType_of_service().equals(mType)){
-                            serviceList.add(id);
+                        if (id.getType_of_service().equals(mType)) {
+                            if (id.getCity().equals(mCity)) {
+                                if (id.getLocal().equals(mLocal)) {
+                                    serviceList.add(id);
+                                }
+                            }
                         }
-                    }
-                    catch (Exception e){
-                        Toast.makeText(getApplicationContext(),"Err",Toast.LENGTH_SHORT);
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Err", Toast.LENGTH_SHORT);
                     }
 
                 }
@@ -305,6 +321,110 @@ public class TenantHomeReg extends AppCompatActivity
                 serviceAdapter = new ServiceListRecyclerViewAdapter(TenantHomeReg.this, serviceArrayList);
                 serviceAdapter.setClickListener(TenantHomeReg.this);
                 recyclerView.setAdapter(serviceAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "databaseError", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void ownerListFetch(String type, String city, String local, final RecyclerView recycle) {
+        final String mType = type;
+        final String mCity = city;
+        final String mLocal = local;
+        RegisterTenantNum.mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                propertyArrayList.clear();
+                // Is better to use a List, because you don't know the size
+                // of the iterator returned by dataSnapshot.getChildren() to
+                // initialize the array
+                roomList = new ArrayList<Property>();
+                for (DataSnapshot locationIDs : dataSnapshot.child("users").getChildren()) {
+                    Toast.makeText(getApplicationContext(), mType + mCity + mLocal + " 3rd Toast", Toast.LENGTH_SHORT).show();
+                    Property id = locationIDs.child("details").getValue(Property.class);
+                    try {
+                        if (locationIDs.child("type").getValue(String.class).equals(mType)) {
+                            if (id.getCity().equals(mCity)) {
+                                if (id.getLocal().equals(mLocal)) {
+                                    roomList.add(id);
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Err", Toast.LENGTH_SHORT);
+                    }
+
+                }
+
+                for (int i = 0; i < roomList.size(); i++) {
+                    try {
+                        Property mRoomList = roomList.get(i);
+                        propertyArrayList.add(mRoomList);
+                    } catch (Exception e) {
+                        Log.e("tenhomepage", e.getMessage());
+                    }
+                }
+                RecyclerView recyclerView = recycle;
+                recyclerView.setLayoutManager(new LinearLayoutManager(TenantHomeReg.this));
+                adapter = new OwnerListRecyclerViewAdapter(TenantHomeReg.this, propertyArrayList);
+                adapter.setClickListener(TenantHomeReg.this);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "databaseError", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void flatMateListFetch(String type, String city, String local, final RecyclerView recycle) {
+        final String mType = type;
+        final String mCity = city;
+        final String mLocal = local;
+        RegisterTenantNum.mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                tenantArrayList.clear();
+                // Is better to use a List, because you don't know the size
+                // of the iterator returned by dataSnapshot.getChildren() to
+                // initialize the array
+                flatMateList = new ArrayList<TenantDataType>();
+                for (DataSnapshot locationIDs : dataSnapshot.child("users").getChildren()) {
+                    TenantDataType id = locationIDs.child("details").getValue(TenantDataType.class);
+                    try {
+                        if (locationIDs.child("type").getValue(String.class).equals(mType)) {
+                            if (id.getCity().equals(mCity)) {
+                                if (id.getLocal().equals(mLocal)) {
+                                    if (locationIDs.child("status").getValue(Boolean.class))
+                                    {
+                                        flatMateList.add(id);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Err", Toast.LENGTH_SHORT);
+                    }
+
+                }
+
+                for (int i = 0; i < flatMateList.size(); i++) {
+                    try {
+                        TenantDataType mFlatList = flatMateList.get(i);
+                        tenantArrayList.add(mFlatList);
+                    } catch (Exception e) {
+                        Log.e("tenhomepage", e.getMessage());
+                    }
+                }
+                RecyclerView recyclerView = recycle;
+                recyclerView.setLayoutManager(new LinearLayoutManager(TenantHomeReg.this));
+                tenantAdapter = new InterestedProfileListRecyclerViewAdapter(TenantHomeReg.this, tenantArrayList);
+                tenantAdapter.setClickListener(TenantHomeReg.this);
+                recyclerView.setAdapter(tenantAdapter);
             }
 
             @Override
@@ -398,6 +518,7 @@ public class TenantHomeReg extends AppCompatActivity
                 findViewById(R.id.profile).setVisibility(View.VISIBLE);
                 findViewById(R.id.search_page).setVisibility(View.GONE);
                 findViewById(R.id.search_page).setVisibility(View.GONE);
+                findViewById(R.id.spinner).setVisibility(View.GONE);
                 mode = "main";
             }
         }
@@ -429,7 +550,7 @@ public class TenantHomeReg extends AppCompatActivity
             return true;
         }
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.sign_out_menu:
                 //signout
                 RegisterTenantNum.mAuth.signOut();
@@ -446,7 +567,7 @@ public class TenantHomeReg extends AppCompatActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
-        }
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -465,6 +586,7 @@ public class TenantHomeReg extends AppCompatActivity
         findViewById(R.id.about_us).setVisibility(View.GONE);
         findViewById(R.id.investors).setVisibility(View.GONE);
         findViewById(R.id.contact_us).setVisibility(View.GONE);
+        findViewById(R.id.spinner).setVisibility(View.GONE);
 
         int id = item.getItemId();
 
@@ -473,7 +595,7 @@ public class TenantHomeReg extends AppCompatActivity
             findViewById(R.id.profile).setVisibility(View.VISIBLE);
             mode = "main";
 
-        }else if (id == R.id.nav_rental_plans) {
+        } else if (id == R.id.nav_rental_plans) {
 
             findViewById(R.id.rental_plans).setVisibility(View.VISIBLE);
             mode = "something else";
@@ -481,19 +603,36 @@ public class TenantHomeReg extends AppCompatActivity
         } else if (id == R.id.nav_food) {
 
             findViewById(R.id.food).setVisibility(View.VISIBLE);
+            findViewById(R.id.spinner).setVisibility(View.VISIBLE);
             mode = "something else";
-            ServiceListFetch("Food Tiffin",(RecyclerView) findViewById(R.id.food_service_list));
+            mSearchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ServiceListFetch("Food Tiffin", city, local, (RecyclerView) findViewById(R.id.food_service_list));
+                }
+            });
 
         } else if (id == R.id.nav_movers_n_packers) {
-
             findViewById(R.id.movers_n_packers).setVisibility(View.VISIBLE);
-            ServiceListFetch("Movers and Packers",(RecyclerView) findViewById(R.id.movers_n_packers_list));
-
+            findViewById(R.id.spinner).setVisibility(View.VISIBLE);
+            mode = "something else";
+            mSearchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ServiceListFetch("Movers and Packers", city, local, (RecyclerView) findViewById(R.id.movers_n_packers_list));
+                }
+            });
         } else if (id == R.id.nav_furniture_rent) {
 
             findViewById(R.id.furniture_rent).setVisibility(View.VISIBLE);
-            ServiceListFetch("Furniture Rent",(RecyclerView) findViewById(R.id.furniture_rent_list));
-
+            findViewById(R.id.spinner).setVisibility(View.VISIBLE);
+            mode = "something else";
+            mSearchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ServiceListFetch("Furniture Rent", city, local, (RecyclerView) findViewById(R.id.furniture_rent_list));
+                }
+            });
         } else if (id == R.id.nav_feedback) {
 
             findViewById(R.id.feedback).setVisibility(View.VISIBLE);
@@ -509,12 +648,12 @@ public class TenantHomeReg extends AppCompatActivity
             findViewById(R.id.about_us).setVisibility(View.VISIBLE);
             mode = "something else";
 
-        } else if (id == R.id.nav_investors){
+        } else if (id == R.id.nav_investors) {
 
             findViewById(R.id.investors).setVisibility(View.VISIBLE);
             mode = "something else";
 
-        } else if (id == R.id.nav_contact_us){
+        } else if (id == R.id.nav_contact_us) {
 
             findViewById(R.id.contact_us).setVisibility(View.VISIBLE);
             mode = "something else";
@@ -528,29 +667,47 @@ public class TenantHomeReg extends AppCompatActivity
 
     public void tonClick(View view) {
         final DatabaseReference db = RegisterTenantNum.mDatabase.child("users").child(MainActivity.readData("user_id"));
-        if(switchBtn.isChecked()){
+        if (switchBtn.isChecked()) {
             switchBtn.setText("Active");
             db.child("status").setValue(true);
-            RegisterTenantNum.mDatabase.child("locationSpecifiedTenant").child(RegisterTenant.localArea).child(MainActivity.readData("user_id")).setValue(MainActivity.readData("user_id"));
-        }
-        else {
+        } else {
             switchBtn.setText("Snoozed");
             db.child("status").setValue(false);
             switchBtn.setChecked(false);
-            RegisterTenantNum.mDatabase.child("locationSpecifiedTenant").child(RegisterTenant.localArea).child(MainActivity.readData("user_id")).setValue(null);
         }
     }
 
     public void edit(View view) {
         edit = true;
-        finish();
+        Intent goToEdit = new Intent(this, RegisterTenant.class);
+        startActivity(goToEdit);
     }
 
     public void goto_rooms(View view) {
         findViewById(R.id.profile).setVisibility(View.GONE);
         findViewById(R.id.search_page).setVisibility(View.VISIBLE);
         findViewById(R.id.shortlist_page).setVisibility(View.GONE);
+        findViewById(R.id.spinner).setVisibility(View.VISIBLE);
         mode = "search";
+
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSearchType = (RadioGroup) findViewById(R.id.room_or_mate);
+                choice = mSearchType.getCheckedRadioButtonId();
+                radioButton = (RadioButton) findViewById(choice);
+                mode = "something_else";
+                switch (radioButton.getText().toString()) {
+                    case "Rooms":
+                        ownerListFetch("owner", city, local, (RecyclerView) findViewById(R.id.owner_list));
+                        break;
+                    case "Flatmates":
+                        flatMateListFetch("tenant", city, local, (RecyclerView) findViewById(R.id.owner_list));
+                        break;
+                }
+            }
+        });
+
     }
 
     public void shortlisted(View view) {
@@ -559,5 +716,10 @@ public class TenantHomeReg extends AppCompatActivity
         findViewById(R.id.shortlist_page).setVisibility(View.VISIBLE);
         mode = "short";
         shortListFetch();
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 }

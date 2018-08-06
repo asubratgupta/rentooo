@@ -2,6 +2,9 @@ package com.subratgupta.rentoo;
 
 public class TenantDataType {
     private String name;
+    private String city;
+    private String local;
+    private String phone;
 
     public TenantDataType() {
     }
@@ -16,5 +19,17 @@ public class TenantDataType {
 
     public String getName() {
         return name;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getLocal() {
+        return local;
+    }
+
+    public String getPhone() {
+        return phone;
     }
 }

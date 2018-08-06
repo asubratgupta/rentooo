@@ -34,6 +34,7 @@ public class InterestedProfileListRecyclerViewAdapter extends RecyclerView.Adapt
     public void onBindViewHolder(InterestedProfileListRecyclerViewAdapter.ViewHolder holder, int position) {
         TenantDataType tenant = mData.get(position);
         holder.myNameView.setText("Name: "+tenant.getName());
+        holder.myPhoneView.setText("Phone: "+tenant.getPhone());
     }
 
     // total number of rows
@@ -46,10 +47,12 @@ public class InterestedProfileListRecyclerViewAdapter extends RecyclerView.Adapt
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView myNameView;
+        TextView myPhoneView;
 
         ViewHolder(View itemView) {
             super(itemView);
             myNameView = itemView.findViewById(R.id.tenant_name);
+            myPhoneView = itemView.findViewById(R.id.tenant_phone);
             itemView.setOnClickListener(this);
         }
 

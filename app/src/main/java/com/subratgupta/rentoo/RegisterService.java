@@ -269,7 +269,6 @@ public class RegisterService extends AppCompatActivity {
                 db.child("isComplete").setValue("true");
                 db.child("city").setValue(city);
                 db.child("local").setValue(localArea);
-                ServiceProviderActivity.mDatabase.child("locationSpecifiedService").child(localArea).child(MainActivity.readData("user_id")).setValue(MainActivity.readData("user_id"));
                 Toast.makeText(getApplicationContext(), "Thank You, Service Registered Successfully.", Toast.LENGTH_SHORT).show();
                 goTo();
             } catch (Exception e) {

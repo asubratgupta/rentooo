@@ -31,11 +31,15 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
 
     OwnerListRecyclerViewAdapter adapter;
 
+    Button mSearchButton;
     Spinner citySpinner;
     Spinner localSpinner;
     List<String> mCityList = new ArrayList<String>();
     List<String> mLocalList = new ArrayList<String>();
     String location;
+    String local;
+    String city;
+    List<Property> roomList;
     public static ArrayList<Property> propertyArrayList = new ArrayList<>();
 
     @Override
@@ -53,6 +57,7 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String tempCity = mCityList.get((int) id);
+                city = tempCity;
                 localFill(tempCity);
             }
 
@@ -71,6 +76,7 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position>0){
                     location = mLocalList.get((int) id);
+                    local = location;
                     mSearchButton.setEnabled(true);
                 }
             }
@@ -84,7 +90,7 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ownerListFetch();
+                ownerListFetch("owner", city, local, (RecyclerView) findViewById(R.id.owner_list));
             }
         });
 
@@ -152,7 +158,7 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
 
     }
 
-    private void ownerListFetch() {
+    /*private void ownerListFetch() {
         RegisterTenantNum.mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -177,6 +183,60 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
                     }
                 }
                 RecyclerView recyclerView = findViewById(R.id.owner_list);
+                recyclerView.setLayoutManager(new LinearLayoutManager(TenantHomePage.this));
+                adapter = new OwnerListRecyclerViewAdapter(TenantHomePage.this, propertyArrayList);
+                adapter.setClickListener(TenantHomePage.this);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "databaseError", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+*/
+
+    private void ownerListFetch(String type, String city, String local, final RecyclerView recycle) {
+        final String mType = type;
+        final String mCity = city;
+        final String mLocal = local;
+        RegisterTenantNum.mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                propertyArrayList.clear();
+                // Is better to use a List, because you don't know the size
+                // of the iterator returned by dataSnapshot.getChildren() to
+                // initialize the array
+                roomList = new ArrayList<Property>();
+                for (DataSnapshot locationIDs : dataSnapshot.child("users").getChildren()) {
+                    Property id = locationIDs.child("details").getValue(Property.class);
+                    try {
+                        if (locationIDs.child("type").getValue(String.class).equals(mType)) {
+                            if (id.getCity().equals(mCity)) {
+                                if (id.getLocal().equals(mLocal)) {
+                                    if (locationIDs.child("status").getValue(String.class).equals(true))
+                                    {
+                                        roomList.add(id);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "Err", Toast.LENGTH_SHORT);
+                    }
+
+                }
+
+                for (int i = 0; i < roomList.size(); i++) {
+                    try {
+                        Property mRoomList = roomList.get(i);
+                        propertyArrayList.add(mRoomList);
+                    } catch (Exception e) {
+                        Log.e("tenhomepage", e.getMessage());
+                    }
+                }
+                RecyclerView recyclerView = recycle;
                 recyclerView.setLayoutManager(new LinearLayoutManager(TenantHomePage.this));
                 adapter = new OwnerListRecyclerViewAdapter(TenantHomePage.this, propertyArrayList);
                 adapter.setClickListener(TenantHomePage.this);

@@ -10,6 +10,47 @@
     tools:showIn="@layout/app_bar_tenant_home_reg">
 
     <LinearLayout
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <Spinner
+            android:id="@+id/cityList"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <Spinner
+            android:id="@+id/localList"
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <Button
+            android:id="@+id/search_btn"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/profile"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -125,35 +166,27 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-
-        <Spinner
-            android:id="@+id/cityList"
-            android:layout_width="match_parent"
-            android:layout_height="40dp" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <Spinner
-            android:id="@+id/localList"
-            android:layout_width="match_parent"
-            android:layout_height="40dp" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <Button
-            android:id="@+id/search_btn"
-            style="@style/ButtonStyle"
+        <RadioGroup
+            android:id="@+id/room_or_mate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Search" />
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rooms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/Rooms"/>
+
+            <RadioButton
+                android:id="@+id/flatmates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Mates"/>
+
+        </RadioGroup>
+
 
         <Space
             android:layout_width="match_parent"
