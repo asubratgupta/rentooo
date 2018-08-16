@@ -20,7 +20,6 @@ public class InterestedProfilesOnOwner extends AppCompatActivity implements Owne
     ArrayList<TenantDataType> interested_tenant_array_list = new ArrayList<>();
     InterestedProfileListRecyclerViewAdapter adapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

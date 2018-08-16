@@ -210,15 +210,13 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
                 // initialize the array
                 roomList = new ArrayList<Property>();
                 for (DataSnapshot locationIDs : dataSnapshot.child("users").getChildren()) {
+                    Toast.makeText(getApplicationContext(), mType + mCity + mLocal + " 3rd Toast", Toast.LENGTH_SHORT).show();
                     Property id = locationIDs.child("details").getValue(Property.class);
                     try {
                         if (locationIDs.child("type").getValue(String.class).equals(mType)) {
                             if (id.getCity().equals(mCity)) {
                                 if (id.getLocal().equals(mLocal)) {
-                                    if (locationIDs.child("status").getValue(String.class).equals(true))
-                                    {
-                                        roomList.add(id);
-                                    }
+                                    roomList.add(id);
                                 }
                             }
                         }
@@ -258,7 +256,7 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
 
     }
 
-    @Override
+   /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.sign_out_menu:
@@ -277,14 +275,14 @@ public class TenantHomePage extends AppCompatActivity implements OwnerListRecycl
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         return true;
-    }
+    }*/
 
     public void register(View view) {
         Intent goToRegisterNum = new Intent(this, RegisterTenantNum.class);
